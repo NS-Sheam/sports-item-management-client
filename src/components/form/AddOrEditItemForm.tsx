@@ -15,6 +15,7 @@ import { useCreateProductMutation, useUpdateProductMutation } from "../../redux/
 import { FieldValues } from "react-hook-form";
 import { toast } from "sonner";
 import { TProduct } from "../../types";
+import { branches } from "../../utils/user.const";
 
 type TAddOrEditItemFormProps = {
   defaultValues: TProduct & { key?: string };
@@ -91,12 +92,19 @@ const AddOrEditItemForm = ({ defaultValues, modalType, setIsModalOpen }: TAddOrE
             label="Branch"
             name="branch"
           >
-            <CustomInput
-              type="text"
+            <CustomSelect
               name="branch"
               required={true}
-              initialValue={defaultValues?.branch}
-            />
+            >
+              {branches?.map((item, index) => (
+                <Select.Option
+                  key={index}
+                  value={item}
+                >
+                  {item}
+                </Select.Option>
+              ))}
+            </CustomSelect>
           </Form.Item>
         </Col>
         <Col span={12}>

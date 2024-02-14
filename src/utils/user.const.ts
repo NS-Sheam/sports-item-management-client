@@ -1,1 +1,1 @@
-export const branches = ["Apparel", "Footwear", "Equipment", "Accessories", "Fitness and Training", "Outdoor Sports"];
+export const branches = ["Sports", "Gym", "Outdoor Game", "Indoor Game", "Accessories", "Fitness"];

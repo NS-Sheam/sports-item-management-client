@@ -9,9 +9,11 @@ import { toast } from "sonner";
 import { TResponse } from "../../types/global";
 import { TUser } from "../../types";
 import { FieldValues, SubmitHandler } from "react-hook-form";
+import CustomSelectWithWatch from "../../components/form/CustomSelectWithWatch";
 const UserManagement = () => {
   const { data: userData, isLoading: isUserLoading } = useGetAllUsersQuery(undefined);
   const [updateUserRole] = useUpdateUserRoleMutation();
+  const [userRole, setUserRole] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [user, setUser] = useState<TUser>();
 
@@ -89,33 +91,34 @@ const UserManagement = () => {
             label="User Role"
             name="role"
           >
-            <CustomSelect
+            <CustomSelectWithWatch
+              onValueChange={setUserRole}
               name="role"
-              required={true}
             >
               <Select.Option value="manager">Manager</Select.Option>
               <Select.Option value="seller">Seller</Select.Option>
-            </CustomSelect>
+            </CustomSelectWithWatch>
           </Form.Item>
-          <Form.Item
-            label="Branch"
-            name="branch"
-          >
-            <CustomSelect
+          {userRole === "manager" && (
+            <Form.Item
+              label="Branch"
               name="branch"
-              required={true}
             >
-              {branches?.map((item, index) => (
-                <Select.Option
-                  key={index}
-                  value={item}
-                >
-                  {item}
-                </Select.Option>
-              ))}
-            </CustomSelect>
-          </Form.Item>
-
+              <CustomSelect
+                name="branch"
+                required={true}
+              >
+                {branches?.map((item, index) => (
+                  <Select.Option
+                    key={index}
+                    value={item}
+                  >
+                    {item}
+                  </Select.Option>
+                ))}
+              </CustomSelect>
+            </Form.Item>
+          )}
           <Row justify="end">
             <Button
               className="mr-2"
