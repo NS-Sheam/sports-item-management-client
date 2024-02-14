@@ -1,36 +1,35 @@
+import { Button } from "antd";
 import { TSales, TSalesColumn } from "../types";
 
-const SalesColumn = () => {
+type TSalesColumnProps = {
+  setInvoiceModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+const SalesColumn = ({ setInvoiceModalOpen }: TSalesColumnProps) => {
   const column: TSalesColumn[] = [
     {
       key: "name",
       title: "Name",
       dataIndex: "name",
-      width: "30%",
     },
     {
       key: "product",
       title: "Product",
       dataIndex: "product",
-      width: "20%",
     },
     {
       key: "price",
       title: "Price",
       dataIndex: "price",
-      width: "20%",
     },
     {
       key: "quantity",
       title: "Quantity",
       dataIndex: "quantity",
-      width: "20%",
     },
     {
       key: "date",
       title: "Date",
       dataIndex: "date",
-      width: "10%",
       filterMode: "tree",
       filteredData: ["last week", "last month", "last year"],
 
@@ -75,6 +74,21 @@ const SalesColumn = () => {
       },
       render: (value: string) => {
         return <span>{new Date(value).toLocaleDateString()}</span>;
+      },
+    },
+    {
+      key: "invoice",
+      title: "Invoice",
+      dataIndex: "invoice",
+      render: () => {
+        return (
+          <Button
+            onClick={() => setInvoiceModalOpen(true)}
+            type="primary"
+          >
+            Invoice
+          </Button>
+        );
       },
     },
   ];

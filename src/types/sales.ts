@@ -12,7 +12,6 @@ export type TSalesColumn = {
   key: string;
   title: string;
   dataIndex: string;
-  width: string;
   filters?: { text: string; value: string }[];
   filteredData?: string[];
   filterMode?: "tree";

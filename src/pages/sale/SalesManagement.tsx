@@ -9,6 +9,8 @@ import { TProduct } from "../../types";
 import { useState } from "react";
 import { TQueryParams } from "../../types/global";
 import dayjs from "dayjs";
+import GenericItemModal from "../../components/modal/GenericItemModal";
+import PdfComponent from "../../components/PdfComponent";
 
 interface ISalesData extends TSales {
   key: string;
@@ -16,9 +18,10 @@ interface ISalesData extends TSales {
 
 const SalesManagement = () => {
   const [params, setParams] = useState<TQueryParams[]>([]);
+  const [invoiceModalOpen, setInvoiceModalOpen] = useState(false);
 
   const [page, setPage] = useState(1);
-  const columns = SalesColumn();
+  const columns = SalesColumn({ setInvoiceModalOpen });
   const { data: items, isLoading: isSalesDataLoading } = useGetSalesQuery([
     { name: "page", value: page },
     { name: "limit", value: 5 },
@@ -68,6 +71,13 @@ const SalesManagement = () => {
         pagination={false}
         loading={isProductLoading || isSalesDataLoading}
       />
+      <GenericItemModal
+        title="Invoice"
+        isModalOpen={invoiceModalOpen}
+        setIsModalOpen={setInvoiceModalOpen}
+      >
+        <PdfComponent />
+      </GenericItemModal>
       <Pagination
         style={{ marginTop: "1rem" }}
         current={page}
