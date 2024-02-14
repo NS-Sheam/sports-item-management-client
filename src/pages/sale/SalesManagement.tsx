@@ -11,10 +11,11 @@ import { TQueryParams } from "../../types/global";
 import dayjs from "dayjs";
 import GenericItemModal from "../../components/modal/GenericItemModal";
 import PdfComponent from "../../components/PdfComponent";
+import { useAppSelector } from "../../redux/hooks";
 
 export interface ISalesData extends TSales {
   key: string;
-  price: string;
+  price: number;
   branch: string;
 }
 
@@ -25,9 +26,13 @@ const SalesManagement = () => {
 
   const [page, setPage] = useState(1);
   const columns = SalesColumn({ setInvoiceModalOpen, setSaleData });
+
+  const { role, branch } = useAppSelector((state) => state.auth.user!);
+
   const { data: items, isLoading: isSalesDataLoading } = useGetSalesQuery([
     { name: "page", value: page },
     { name: "limit", value: 5 },
+    { name: "branch", value: role === "manager" ? branch! : "" },
     ...params,
   ]);
 
@@ -45,6 +50,7 @@ const SalesManagement = () => {
   const onChange: TableProps<TSalesColumn>["onChange"] = (_pagination, filters, _sorter, extra) => {
     if (extra.action === "filter") {
       const queryParams: TQueryParams[] = [];
+
       filters.date?.forEach((item) => {
         queryParams.push({
           name: "dateRange",

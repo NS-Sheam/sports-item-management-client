@@ -10,9 +10,11 @@ import { useAddSalesMutation } from "../../redux/features/sales/salesApi";
 
 import { FieldValues } from "react-hook-form";
 import SalesFrom from "../../components/form/SalesFrom";
-import { TProduct, TProductColumn } from "../../types";
-import { TQueryParams } from "../../types/global";
+import { TProduct, TProductColumn, TSales } from "../../types";
+import { TQueryParams, TResponse } from "../../types/global";
 import { TableRowSelection } from "antd/es/table/interface";
+import { ISalesData } from "../sale/SalesManagement";
+import PdfComponent from "../../components/PdfComponent";
 const ItemManagement = () => {
   const [params, setParams] = useState<TQueryParams[]>([]);
   const [page, setPage] = useState(1);
@@ -29,6 +31,8 @@ const ItemManagement = () => {
   const [addSales] = useAddSalesMutation();
   const [selectedProductId, setSelectedProductId] = useState<string[]>([]);
   const [isSellModalOpen, setIsSellModalOpen] = useState(false);
+  const [invoiceModalOpen, setInvoiceModalOpen] = useState(false);
+  const [saleData, setSaleData] = useState<ISalesData>();
 
   const handleDelete = async (id: string) => {
     const toastId = toast.loading("Loading...");
@@ -51,14 +55,23 @@ const ItemManagement = () => {
     data.product = defaultValue._id;
     data.quantity = Number(data.quantity);
     data.date = new Date(data.date).toISOString();
-
     try {
-      const res = await addSales(data);
+      const res = (await addSales(data)) as TResponse<TSales>;
 
-      if ((res as any)?.error) {
+      if (res?.error) {
         throw new Error((res as any)?.error?.data.message);
       }
+      const salesModalData = {
+        name: res.data!.name,
+        product: defaultValue.name,
+        price: defaultValue.price,
+        date: data.date,
+        quantity: data.quantity,
+      } as ISalesData;
+
+      setSaleData(salesModalData);
       setIsSellModalOpen(false);
+      setInvoiceModalOpen(true);
       toast.success("Operation successfull!", {
         id: toastId,
         duration: 2000,
@@ -102,7 +115,6 @@ const ItemManagement = () => {
     type: "checkbox",
   };
   const onChange: TableProps<TProductColumn>["onChange"] = (_pagination, filters, _sorter, extra) => {
-    console.log("params", _pagination, filters, _sorter, extra);
     if (extra.action === "filter") {
       const queryParams: TQueryParams[] = [];
 
@@ -176,6 +188,13 @@ const ItemManagement = () => {
           handleSell={handleSell}
           setIsModalOpen={setIsSellModalOpen}
         />
+      </GenericItemModal>
+      <GenericItemModal
+        title="Invoice"
+        isModalOpen={invoiceModalOpen}
+        setIsModalOpen={setInvoiceModalOpen}
+      >
+        <PdfComponent saleData={saleData!} />
       </GenericItemModal>
     </div>
   );

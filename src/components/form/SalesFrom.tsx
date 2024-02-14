@@ -2,17 +2,15 @@ import { Button, Form, Row } from "antd";
 import CustomForm from "./CustomForm";
 import CustomInput from "./CustomInput";
 import { FieldValues } from "react-hook-form";
-
+import { TProduct } from "../../types";
 import CustomDatePicker from "./CustomDatePicker";
-import { useAppSelector } from "../../redux/hooks";
 
 type TSalesFromProps = {
   handleSell: (data: FieldValues) => Promise<void>;
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  product: TProduct;
 };
-const SalesFrom = ({ handleSell, setIsModalOpen }: TSalesFromProps) => {
-  const branch = useAppSelector((state) => state.auth.user?.branch);
-
+const SalesFrom = ({ product, handleSell, setIsModalOpen }: TSalesFromProps) => {
   return (
     <CustomForm onSubmit={handleSell}>
       <Form.Item
@@ -32,7 +30,7 @@ const SalesFrom = ({ handleSell, setIsModalOpen }: TSalesFromProps) => {
         <CustomInput
           type="text"
           name="branch"
-          initialValue={branch}
+          initialValue={product.branch}
           readOnly={true}
           required={true}
         />

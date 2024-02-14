@@ -33,6 +33,7 @@ const SalesColumn = ({ setInvoiceModalOpen, setSaleData }: TSalesColumnProps) =>
       title: "Date",
       dataIndex: "date",
       filterMode: "tree",
+      filterMultiple: false,
       filteredData: ["last week", "last month", "last year"],
 
       filters: [

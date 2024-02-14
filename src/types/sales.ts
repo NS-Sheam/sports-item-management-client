@@ -16,6 +16,7 @@ export type TSalesColumn = {
   filteredData?: string[];
   filterMode?: "tree";
   filterSearch?: boolean;
+  filterMultiple?: boolean;
   onFilter?: (value: string, record: TSales) => boolean;
   render?: (value: string, record: TSales) => ReactNode;
 };

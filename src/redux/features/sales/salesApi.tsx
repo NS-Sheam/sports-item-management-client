@@ -1,4 +1,5 @@
-import { TQueryParams } from "../../../types/global";
+import { TSales } from "../../../types";
+import { TQueryParams, TReduxResponse } from "../../../types/global";
 import { baseApi } from "../../api/baseApi";
 
 const salesApi = baseApi.injectEndpoints({
@@ -28,6 +29,7 @@ const salesApi = baseApi.injectEndpoints({
           body: newSales,
         };
       },
+      transformResponse: (response: TReduxResponse<TSales>) => response.data,
       invalidatesTags: ["sales", "product"],
     }),
   }),

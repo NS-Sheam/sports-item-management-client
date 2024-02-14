@@ -1,3 +1,4 @@
+import { BaseQueryApi } from "@reduxjs/toolkit/query";
 import React from "react";
 
 export type TErrorResponse = {
@@ -35,3 +36,5 @@ export type TQueryParams = {
   name: string;
   value: boolean | React.Key;
 };
+
+export type TReduxResponse<T> = TResponse<T> & BaseQueryApi;
