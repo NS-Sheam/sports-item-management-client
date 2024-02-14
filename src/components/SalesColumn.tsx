@@ -3,8 +3,9 @@ import { TSales, TSalesColumn } from "../types";
 
 type TSalesColumnProps = {
   setInvoiceModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setSaleData: React.Dispatch<React.SetStateAction<TSales | undefined>>;
 };
-const SalesColumn = ({ setInvoiceModalOpen }: TSalesColumnProps) => {
+const SalesColumn = ({ setInvoiceModalOpen, setSaleData }: TSalesColumnProps) => {
   const column: TSalesColumn[] = [
     {
       key: "name",
@@ -80,10 +81,13 @@ const SalesColumn = ({ setInvoiceModalOpen }: TSalesColumnProps) => {
       key: "invoice",
       title: "Invoice",
       dataIndex: "invoice",
-      render: () => {
+      render: (_, record) => {
         return (
           <Button
-            onClick={() => setInvoiceModalOpen(true)}
+            onClick={() => {
+              setSaleData(record);
+              setInvoiceModalOpen(true);
+            }}
             type="primary"
           >
             Invoice

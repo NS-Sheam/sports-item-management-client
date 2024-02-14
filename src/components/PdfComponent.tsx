@@ -1,14 +1,8 @@
-import React from "react";
-import { BlobProvider, Document, Page, Text, View, StyleSheet, PDFViewer } from "@react-pdf/renderer";
+import { BlobProvider, Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
+import { TSales } from "../types";
+import dayjs from "dayjs";
 
-const PdfComponent = () => {
-  const data = [
-    { name: "John Doe", product: "Product 1", quantity: 10, date: "2021-10-10" },
-    { name: "Jane Doe", product: "Product 2", quantity: 20, date: "2021-10-11" },
-    { name: "John Smith", product: "Product 3", quantity: 30, date: "2021-10-12" },
-    { name: "Jane Smith", product: "Product 4", quantity: 40, date: "2021-10-13" },
-  ];
-
+const PdfComponent = ({ saleData }: { saleData: TSales }) => {
   // Define styles for PDF
   const styles = StyleSheet.create({
     page: {
@@ -43,6 +37,15 @@ const PdfComponent = () => {
       flexGrow: 1,
       textAlign: "center",
     },
+    footer: {
+      fontSize: 12,
+      textAlign: "center",
+      marginTop: 25,
+      paddingTop: 10,
+      borderWidth: 3,
+      borderColor: "gray",
+      borderStyle: "dashed",
+    },
   });
 
   return (
@@ -73,25 +76,20 @@ const PdfComponent = () => {
                       <Text>Date</Text>
                     </View>
                   </View>
-                  {data.map((item, index) => (
-                    <View
-                      style={styles.row}
-                      key={index}
-                    >
-                      <View style={styles.cell}>
-                        <Text>{item.name}</Text>
-                      </View>
-                      <View style={styles.cell}>
-                        <Text>{item.product}</Text>
-                      </View>
-                      <View style={styles.cell}>
-                        <Text>{item.quantity}</Text>
-                      </View>
-                      <View style={styles.cell}>
-                        <Text>{item.date}</Text>
-                      </View>
+                  <View style={styles.row}>
+                    <View style={styles.cell}>
+                      <Text>{saleData.name}</Text>
                     </View>
-                  ))}
+                    <View style={styles.cell}>
+                      <Text>{saleData.product}</Text>
+                    </View>
+                    <View style={styles.cell}>
+                      <Text>{saleData.quantity}</Text>
+                    </View>
+                    <View style={styles.cell}>
+                      <Text>{dayjs(saleData.date).format("DD-MM-YYYY")}</Text>
+                    </View>
+                  </View>
                 </View>
               </View>
             </Page>
@@ -100,7 +98,7 @@ const PdfComponent = () => {
       >
         {({ blob, url, loading, error }) => (
           <a
-            href={url}
+            href={url!}
             download="sales_report.pdf"
           >
             Download PDF

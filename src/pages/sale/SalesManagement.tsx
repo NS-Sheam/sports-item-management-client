@@ -19,9 +19,10 @@ interface ISalesData extends TSales {
 const SalesManagement = () => {
   const [params, setParams] = useState<TQueryParams[]>([]);
   const [invoiceModalOpen, setInvoiceModalOpen] = useState(false);
+  const [saleData, setSaleData] = useState<TSales>();
 
   const [page, setPage] = useState(1);
-  const columns = SalesColumn({ setInvoiceModalOpen });
+  const columns = SalesColumn({ setInvoiceModalOpen, setSaleData });
   const { data: items, isLoading: isSalesDataLoading } = useGetSalesQuery([
     { name: "page", value: page },
     { name: "limit", value: 5 },
@@ -76,7 +77,7 @@ const SalesManagement = () => {
         isModalOpen={invoiceModalOpen}
         setIsModalOpen={setInvoiceModalOpen}
       >
-        <PdfComponent />
+        <PdfComponent saleData={saleData} />
       </GenericItemModal>
       <Pagination
         style={{ marginTop: "1rem" }}
