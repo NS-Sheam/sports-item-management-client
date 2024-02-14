@@ -1,13 +1,13 @@
 import { BlobProvider, Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
-import { TSales } from "../types";
-import dayjs from "dayjs";
+import { Button } from "antd";
+import { ISalesData } from "../pages/sale/SalesManagement";
 
-const PdfComponent = ({ saleData }: { saleData: TSales }) => {
+const PdfComponent = ({ saleData }: { saleData: ISalesData }) => {
   // Define styles for PDF
   const styles = StyleSheet.create({
     page: {
       flexDirection: "row",
-      backgroundColor: "#E4E4E4",
+      backgroundColor: "#FFF",
       padding: 20,
     },
     section: {
@@ -21,7 +21,6 @@ const PdfComponent = ({ saleData }: { saleData: TSales }) => {
       textAlign: "center",
     },
     table: {
-      display: "flex",
       width: "100%",
       borderStyle: "solid",
       borderWidth: 1,
@@ -29,6 +28,8 @@ const PdfComponent = ({ saleData }: { saleData: TSales }) => {
     },
     row: {
       flexDirection: "row",
+      borderBottomWidth: 1,
+      borderBottomColor: "#000",
     },
     cell: {
       padding: 5,
@@ -37,21 +38,27 @@ const PdfComponent = ({ saleData }: { saleData: TSales }) => {
       flexGrow: 1,
       textAlign: "center",
     },
-    footer: {
-      fontSize: 12,
-      textAlign: "center",
-      marginTop: 25,
-      paddingTop: 10,
-      borderWidth: 3,
-      borderColor: "gray",
-      borderStyle: "dashed",
-    },
   });
 
   return (
     <div>
-      <h1>Sales Report</h1>
-
+      <h1 style={{ textAlign: "center" }}>Invoice</h1>
+      <div>
+        <table style={{ width: "100%" }}>
+          <tr>
+            <th>Name</th>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Date</th>
+          </tr>
+          <tr>
+            <td>{saleData.name}</td>
+            <td>{saleData.product}</td>
+            <td>{saleData.price}</td>
+            <td>{new Date(saleData.date).toLocaleDateString()}</td>
+          </tr>
+        </table>
+      </div>
       <BlobProvider
         document={
           <Document>
@@ -60,7 +67,7 @@ const PdfComponent = ({ saleData }: { saleData: TSales }) => {
               style={styles.page}
             >
               <View style={styles.section}>
-                <Text style={styles.header}>Sales Report</Text>
+                <Text style={styles.header}>Invoice</Text>
                 <View style={styles.table}>
                   <View style={styles.row}>
                     <View style={styles.cell}>
@@ -70,7 +77,7 @@ const PdfComponent = ({ saleData }: { saleData: TSales }) => {
                       <Text>Product</Text>
                     </View>
                     <View style={styles.cell}>
-                      <Text>Quantity</Text>
+                      <Text>Price</Text>
                     </View>
                     <View style={styles.cell}>
                       <Text>Date</Text>
@@ -84,10 +91,10 @@ const PdfComponent = ({ saleData }: { saleData: TSales }) => {
                       <Text>{saleData.product}</Text>
                     </View>
                     <View style={styles.cell}>
-                      <Text>{saleData.quantity}</Text>
+                      <Text>{saleData.price}</Text>
                     </View>
                     <View style={styles.cell}>
-                      <Text>{dayjs(saleData.date).format("DD-MM-YYYY")}</Text>
+                      <Text>{new Date(saleData.date).toLocaleDateString()}</Text>
                     </View>
                   </View>
                 </View>
@@ -96,13 +103,18 @@ const PdfComponent = ({ saleData }: { saleData: TSales }) => {
           </Document>
         }
       >
-        {({ blob, url, loading, error }) => (
-          <a
-            href={url!}
-            download="sales_report.pdf"
+        {({ url }) => (
+          <Button
+            type="primary"
+            target="_blank"
           >
-            Download PDF
-          </a>
+            <a
+              href={url!}
+              download="invoice.pdf"
+            >
+              Download invoice
+            </a>
+          </Button>
         )}
       </BlobProvider>
     </div>

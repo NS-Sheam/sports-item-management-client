@@ -1,9 +1,10 @@
 import { Button } from "antd";
 import { TSales, TSalesColumn } from "../types";
+import { ISalesData } from "../pages/sale/SalesManagement";
 
 type TSalesColumnProps = {
   setInvoiceModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setSaleData: React.Dispatch<React.SetStateAction<TSales | undefined>>;
+  setSaleData: React.Dispatch<React.SetStateAction<ISalesData | undefined>>;
 };
 const SalesColumn = ({ setInvoiceModalOpen, setSaleData }: TSalesColumnProps) => {
   const column: TSalesColumn[] = [
@@ -85,7 +86,7 @@ const SalesColumn = ({ setInvoiceModalOpen, setSaleData }: TSalesColumnProps) =>
         return (
           <Button
             onClick={() => {
-              setSaleData(record);
+              setSaleData(record as ISalesData);
               setInvoiceModalOpen(true);
             }}
             type="primary"

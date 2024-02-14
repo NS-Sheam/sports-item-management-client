@@ -15,7 +15,7 @@ import { useCreateProductMutation, useUpdateProductMutation } from "../../redux/
 import { FieldValues } from "react-hook-form";
 import { toast } from "sonner";
 import { TProduct } from "../../types";
-import { branches } from "../../utils/user.const";
+import { useAppSelector } from "../../redux/hooks";
 
 type TAddOrEditItemFormProps = {
   defaultValues: TProduct & { key?: string };
@@ -27,6 +27,7 @@ const img_hosting_token = import.meta.env.VITE_IMAGE_HOSTING_TOKEN;
 const AddOrEditItemForm = ({ defaultValues, modalType, setIsModalOpen }: TAddOrEditItemFormProps) => {
   const [createProduct] = useCreateProductMutation();
   const [updateProduct] = useUpdateProductMutation();
+  const branch = useAppSelector((state) => state.auth.user?.branch);
   const img_hosting_url = `https://api.imgbb.com/1/upload?key=${img_hosting_token}`;
 
   const onSubmit = async (data: FieldValues) => {
@@ -92,19 +93,13 @@ const AddOrEditItemForm = ({ defaultValues, modalType, setIsModalOpen }: TAddOrE
             label="Branch"
             name="branch"
           >
-            <CustomSelect
+            <CustomInput
+              type="text"
               name="branch"
+              initialValue={branch}
+              readOnly={true}
               required={true}
-            >
-              {branches?.map((item, index) => (
-                <Select.Option
-                  key={index}
-                  value={item}
-                >
-                  {item}
-                </Select.Option>
-              ))}
-            </CustomSelect>
+            />
           </Form.Item>
         </Col>
         <Col span={12}>

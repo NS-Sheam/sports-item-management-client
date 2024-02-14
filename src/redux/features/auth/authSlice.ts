@@ -5,6 +5,7 @@ export type TUser = {
   name: string;
   email: string;
   role: string;
+  branch?: string;
 };
 
 type TInitialState = {
@@ -22,12 +23,13 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action) => {
-      const { name, email, role } = action.payload.data;
+      const { name, email, role, branch } = action.payload.data;
 
       state.user = {
         name,
         email,
         role,
+        branch,
       };
       state.token = action.payload.token;
     },

@@ -55,21 +55,32 @@ const ItemColumn = ({
     if (column?.actions) {
       returnableColumn.render = (_, record) => (
         <div>
-          {role === "manager" ||
-            (role === "superAdmin" && (
-              <Tag
-                className="cursor-pointer"
-                color="green"
-                onClick={() => {
-                  setModalType("edit");
-                  setIsModalOpen(true);
-                  setDefaultValue(record as TProduct);
-                }}
-              >
-                Edit
-              </Tag>
-            ))}
+          {role === "manager" || role === "superAdmin" ? (
+            <Tag
+              className="cursor-pointer"
+              color="green"
+              onClick={() => {
+                setModalType("edit");
+                setIsModalOpen(true);
+                setDefaultValue(record as TProduct);
+              }}
+            >
+              Edit
+            </Tag>
+          ) : null}
 
+          {role === "seller" || role === "superAdmin" ? (
+            <Tag
+              className="cursor-pointer"
+              color="blue"
+              onClick={() => {
+                setDefaultValue(record as TProduct);
+                setIsSellModalOpen(true);
+              }}
+            >
+              Sell
+            </Tag>
+          ) : null}
           {role === "manager" ||
             (role === "superAdmin" && (
               <Tag
@@ -80,33 +91,19 @@ const ItemColumn = ({
                 Delete
               </Tag>
             ))}
-          {role === "sell" ||
-            (role === "superAdmin" && (
-              <Tag
-                className="cursor-pointer"
-                color="blue"
-                onClick={() => {
-                  setDefaultValue(record as TProduct);
-                  setIsSellModalOpen(true);
-                }}
-              >
-                Sell
-              </Tag>
-            ))}
-          {role === "manager" ||
-            (role === "superAdmin" && (
-              <Tag
-                className="cursor-pointer"
-                color="yellow"
-                onClick={() => {
-                  setModalType("add");
-                  setDefaultValue(record as TProduct);
-                  setIsModalOpen(true);
-                }}
-              >
-                Duplicate
-              </Tag>
-            ))}
+          {role === "manager" || role === "superAdmin" ? (
+            <Tag
+              className="cursor-pointer"
+              color="yellow"
+              onClick={() => {
+                setModalType("add");
+                setDefaultValue(record as TProduct);
+                setIsModalOpen(true);
+              }}
+            >
+              Duplicate
+            </Tag>
+          ) : null}
         </div>
       );
     }

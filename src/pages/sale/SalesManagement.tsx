@@ -12,14 +12,16 @@ import dayjs from "dayjs";
 import GenericItemModal from "../../components/modal/GenericItemModal";
 import PdfComponent from "../../components/PdfComponent";
 
-interface ISalesData extends TSales {
+export interface ISalesData extends TSales {
   key: string;
+  price: string;
+  branch: string;
 }
 
 const SalesManagement = () => {
   const [params, setParams] = useState<TQueryParams[]>([]);
   const [invoiceModalOpen, setInvoiceModalOpen] = useState(false);
-  const [saleData, setSaleData] = useState<TSales>();
+  const [saleData, setSaleData] = useState<ISalesData>();
 
   const [page, setPage] = useState(1);
   const columns = SalesColumn({ setInvoiceModalOpen, setSaleData });
@@ -77,7 +79,7 @@ const SalesManagement = () => {
         isModalOpen={invoiceModalOpen}
         setIsModalOpen={setInvoiceModalOpen}
       >
-        <PdfComponent saleData={saleData} />
+        <PdfComponent saleData={saleData!} />
       </GenericItemModal>
       <Pagination
         style={{ marginTop: "1rem" }}
