@@ -38,6 +38,15 @@ const PdfComponent = ({ saleData }: { saleData: ISalesData }) => {
       flexGrow: 1,
       textAlign: "center",
     },
+    footer: {
+      position: "absolute",
+      bottom: 30,
+      left: 0,
+      right: 0,
+      textAlign: "center",
+      fontSize: 12,
+      color: "#888",
+    },
   });
 
   return (
@@ -98,6 +107,9 @@ const PdfComponent = ({ saleData }: { saleData: ISalesData }) => {
                     </View>
                   </View>
                 </View>
+              </View>
+              <View style={styles.footer}>
+                <Text>Thank you for your business</Text>
               </View>
             </Page>
           </Document>

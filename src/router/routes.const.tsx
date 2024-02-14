@@ -5,6 +5,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import SalesManagement from "../pages/sale/SalesManagement";
 import UserManagement from "../pages/user/UserManagement";
+import PrivateRoute from "./PrivateRoute";
 
 export const routeItems = [
   {
@@ -28,9 +29,12 @@ export const routeItems = [
         element: <SalesManagement />,
       },
       {
-        name: "Users",
         path: "/users",
-        element: <UserManagement />,
+        element: (
+          <PrivateRoute userRole={["admin"]}>
+            <UserManagement />
+          </PrivateRoute>
+        ),
       },
     ],
   },

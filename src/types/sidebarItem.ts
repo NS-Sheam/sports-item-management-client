@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
 export type TItemRoutes = {
-  name: string;
+  name?: string;
   path: string;
   element?: ReactNode;
   children?: TItemRoutes[];
