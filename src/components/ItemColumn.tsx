@@ -2,6 +2,9 @@ import { SetStateAction } from "react";
 import { productColumnsItem } from "../utils/item.const";
 import { Tag } from "antd";
 import { TProduct, TProductColumn } from "../types";
+import { useAppSelector } from "../redux/hooks";
+import { jwtDecode } from "jwt-decode";
+import { TUser } from "../redux/features/auth/authSlice";
 
 type TItemColumnProps = {
   setModalType: React.Dispatch<SetStateAction<"add" | "edit">>;
@@ -18,6 +21,11 @@ const ItemColumn = ({
   handleDelete,
   setIsSellModalOpen,
 }: TItemColumnProps) => {
+  const { token } = useAppSelector((state) => state.auth);
+
+  const user = jwtDecode(token as string) as TUser;
+  const { role } = user;
+
   return productColumnsItem?.map((column) => {
     const returnableColumn: TProductColumn = {
       key: column?.dataIndex,
@@ -47,45 +55,58 @@ const ItemColumn = ({
     if (column?.actions) {
       returnableColumn.render = (_, record) => (
         <div>
-          <Tag
-            className="cursor-pointer"
-            color="green"
-            onClick={() => {
-              setModalType("edit");
-              setIsModalOpen(true);
-              setDefaultValue(record as TProduct);
-            }}
-          >
-            Edit
-          </Tag>
-          <Tag
-            className="cursor-pointer"
-            color="red"
-            onClick={() => handleDelete((record as TProduct)?._id)}
-          >
-            Delete
-          </Tag>
-          <Tag
-            className="cursor-pointer"
-            color="blue"
-            onClick={() => {
-              setDefaultValue(record as TProduct);
-              setIsSellModalOpen(true);
-            }}
-          >
-            Sell
-          </Tag>
-          <Tag
-            className="cursor-pointer"
-            color="yellow"
-            onClick={() => {
-              setModalType("add");
-              setDefaultValue(record as TProduct);
-              setIsModalOpen(true);
-            }}
-          >
-            Duplicate
-          </Tag>
+          {role === "manager" ||
+            (role === "superAdmin" && (
+              <Tag
+                className="cursor-pointer"
+                color="green"
+                onClick={() => {
+                  setModalType("edit");
+                  setIsModalOpen(true);
+                  setDefaultValue(record as TProduct);
+                }}
+              >
+                Edit
+              </Tag>
+            ))}
+
+          {role === "manager" ||
+            (role === "superAdmin" && (
+              <Tag
+                className="cursor-pointer"
+                color="red"
+                onClick={() => handleDelete((record as TProduct)?._id)}
+              >
+                Delete
+              </Tag>
+            ))}
+          {role === "sell" ||
+            (role === "superAdmin" && (
+              <Tag
+                className="cursor-pointer"
+                color="blue"
+                onClick={() => {
+                  setDefaultValue(record as TProduct);
+                  setIsSellModalOpen(true);
+                }}
+              >
+                Sell
+              </Tag>
+            ))}
+          {role === "manager" ||
+            (role === "superAdmin" && (
+              <Tag
+                className="cursor-pointer"
+                color="yellow"
+                onClick={() => {
+                  setModalType("add");
+                  setDefaultValue(record as TProduct);
+                  setIsModalOpen(true);
+                }}
+              >
+                Duplicate
+              </Tag>
+            ))}
         </div>
       );
     }
