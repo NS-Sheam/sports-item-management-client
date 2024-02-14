@@ -5,7 +5,7 @@ export type TSales = {
   name: string;
   product: string;
   quantity: number;
-  createdAt: string;
+  date: string;
 };
 
 export type TSalesColumn = {

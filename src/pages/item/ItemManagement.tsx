@@ -50,6 +50,8 @@ const ItemManagement = () => {
     const toastId = toast.loading("Loading...");
     data.product = defaultValue._id;
     data.quantity = Number(data.quantity);
+    data.date = new Date(data.date).toISOString();
+
     try {
       const res = await addSales(data);
 

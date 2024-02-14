@@ -4,6 +4,7 @@ import ItemManagement from "../pages/item/ItemManagement";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import SalesManagement from "../pages/sale/SalesManagement";
+import UserManagement from "../pages/user/UserManagement";
 
 export const routeItems = [
   {
@@ -25,6 +26,11 @@ export const routeItems = [
         name: "Sales Management",
         path: "/sales-management",
         element: <SalesManagement />,
+      },
+      {
+        name: "Users",
+        path: "/users",
+        element: <UserManagement />,
       },
     ],
   },

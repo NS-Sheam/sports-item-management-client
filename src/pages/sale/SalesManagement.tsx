@@ -33,8 +33,9 @@ const SalesManagement = () => {
     product: products?.data?.find((product: TProduct) => product._id === item.product)?.name,
     price: "$" + products?.data?.find((product: TProduct) => product._id === item.product)?.price,
     quantity: item.quantity,
-    createdAt: new Date(item.createdAt),
+    date: item.date,
   }));
+
   const onChange: TableProps<TSalesColumn>["onChange"] = (_pagination, filters, _sorter, extra) => {
     if (extra.action === "filter") {
       const queryParams: TQueryParams[] = [];

@@ -31,7 +31,6 @@ const SalesColumn = () => {
       title: "Date",
       dataIndex: "date",
       width: "10%",
-      // filter: true,
       filterMode: "tree",
       filteredData: ["last week", "last month", "last year"],
 
@@ -52,7 +51,7 @@ const SalesColumn = () => {
       onFilter: (value: string, record: TSales) => {
         const currentDate = new Date();
 
-        const recordDate = new Date(record.createdAt);
+        const recordDate = new Date(record.date);
 
         if (value === "last week") {
           const lastWeekDate = new Date();
@@ -74,13 +73,8 @@ const SalesColumn = () => {
 
         return true;
       },
-      render: (value: string, record: TSales) => {
-        return (
-          <span>
-            {new Date(record?.createdAt).toLocaleDateString()}
-            {value}
-          </span>
-        );
+      render: (value: string) => {
+        return <span>{new Date(value).toLocaleDateString()}</span>;
       },
     },
   ];

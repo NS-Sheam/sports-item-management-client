@@ -3,6 +3,7 @@ import CustomForm from "./CustomForm";
 import CustomInput from "./CustomInput";
 import { FieldValues } from "react-hook-form";
 import { TProduct } from "../../types";
+import CustomDatePicker from "./CustomDatePicker";
 
 type TSalesFromProps = {
   handleSell: (data: FieldValues) => Promise<void>;
@@ -10,8 +11,6 @@ type TSalesFromProps = {
   product: TProduct;
 };
 const SalesFrom = ({ product, handleSell, setIsModalOpen }: TSalesFromProps) => {
-  console.log(product);
-
   return (
     <CustomForm onSubmit={handleSell}>
       <Form.Item
@@ -45,6 +44,12 @@ const SalesFrom = ({ product, handleSell, setIsModalOpen }: TSalesFromProps) => 
           name="quantity"
           required={true}
         />
+      </Form.Item>
+      <Form.Item
+        label="Date"
+        name="date"
+      >
+        <CustomDatePicker name="date" />
       </Form.Item>
 
       <Row justify="end">

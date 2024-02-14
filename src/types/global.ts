@@ -3,10 +3,15 @@ import React from "react";
 export type TErrorResponse = {
   success: boolean;
   statusCode: number;
-  message: string;
-  errorSource: {
-    path: string;
+  message?: string;
+  data?: {
+    success: boolean;
+    statusCode: number;
     message: string;
+    errorSource: {
+      path: string;
+      message: string;
+    };
   };
 };
 
