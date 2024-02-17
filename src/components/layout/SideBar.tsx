@@ -22,6 +22,9 @@ const Sidebar = () => {
   if (role === "superAdmin") {
     items.push({ key: "Users", label: <NavLink to="/users">User</NavLink> });
   }
+  if (role === "manager" || role === "superAdmin") {
+    items.push({ key: "Sales Management", label: <NavLink to="/sales-management">Sales Management</NavLink> });
+  }
 
   return (
     <Sider

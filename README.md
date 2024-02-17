@@ -35,6 +35,10 @@ npm run dev # for run the site
 
 - **Endpoint:** `http://localhost:5173/sales-management`
 
+## User Management
+
+- **Endpoint:** `http://localhost:5173/users`
+
 ## Logout
 
 - **Endpoint:** `http://localhost:5173/logout`

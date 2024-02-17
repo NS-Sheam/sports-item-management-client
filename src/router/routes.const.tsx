@@ -24,9 +24,12 @@ export const routeItems = [
         element: <ItemManagement />,
       },
       {
-        name: "Sales Management",
         path: "/sales-management",
-        element: <SalesManagement />,
+        element: (
+          <PrivateRoute userRole={["manager", "superAdmin"]}>
+            <SalesManagement />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/users",

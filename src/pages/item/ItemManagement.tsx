@@ -17,11 +17,13 @@ import { ISalesData } from "../sale/SalesManagement";
 import PdfComponent from "../../components/PdfComponent";
 import { useAppSelector } from "../../redux/hooks";
 const ItemManagement = () => {
+  const { role, branch } = useAppSelector((state) => state.auth.user!);
   const [params, setParams] = useState<TQueryParams[]>([]);
   const [page, setPage] = useState(1);
   const { data: items, isLoading: productIsLoading } = useGetProductsQuery([
     { name: "page", value: page },
     { name: "limit", value: 5 },
+    { name: "branch", value: role === "manager" ? branch! : "" },
     ...params,
   ]);
 
@@ -34,7 +36,6 @@ const ItemManagement = () => {
   const [isSellModalOpen, setIsSellModalOpen] = useState(false);
   const [invoiceModalOpen, setInvoiceModalOpen] = useState(false);
   const [saleData, setSaleData] = useState<ISalesData>();
-  const { role } = useAppSelector((state) => state.auth.user!);
 
   const handleDelete = async (id: string) => {
     const toastId = toast.loading("Loading...");

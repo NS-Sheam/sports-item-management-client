@@ -288,6 +288,7 @@ const AddOrEditItemForm = ({ defaultValues, modalType, setIsModalOpen }: TAddOrE
         <Col
           span={8}
           offset={16}
+          className="flex justify-end"
         >
           <Button
             className="mr-2"
