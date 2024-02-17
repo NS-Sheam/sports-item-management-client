@@ -59,14 +59,21 @@ const Login = () => {
   return (
     <>
       <div className="flex items-center justify-center min-h-screen bg-yellow-50 ">
-        <div className="grid grid-cols-1 lg:grid-cols-2 justify-center items-center gap-6 lg:gap-20 h-full w-full lg:w-[calc(100vw-30vw)] lg:h-[calc(100vh-20vh)] bg-yellow-400 rounded-3xl p-6">
-          <div className="space-y-2 text-center lg:text-left">
+        <div className="grid grid-cols-1 lg:grid-cols-2 justify-center items-center gap-6 lg:gap-20 h-full w-full lg:w-[calc(100vw-30vw)] lg:h-[calc(100vh-20vh)] bg-yellow-400 rounded-3xl p-6 relative">
+          <div className="absolute h-full w-1/2 left-0 top-0 bg-white rounded-r-3xl hidden lg:flex"></div>
+          <div className="space-y-2 text-center z-10">
             <h1 className=" text-4xl font-bold">Sportiz</h1>
 
-            <p>
+            <p className="text-xl text-left">
               Taking the victory lap in sports item management – where every goal is neatly organized and every play is
               a well-managed display!
             </p>
+            <div
+              className="hidden lg:block cursor-pointer px-3 py-3 text-2xl bg-yellow-400 w-24 mx-auto rounded-md font-bold text-white"
+              onClick={() => setRegister(!register)}
+            >
+              {!register ? "Register" : "Login"}
+            </div>
           </div>
           <div className="space-y-3">
             <CustomForm onSubmit={onSubmit}>
@@ -108,7 +115,10 @@ const Login = () => {
                       {!register ? "Login" : "Register"}
                     </Button>
                   </Col>
-                  <Col span={24}>
+                  <Col
+                    span={24}
+                    className="lg:hidden"
+                  >
                     <Button
                       type="link"
                       onClick={() => setRegister(!register)}

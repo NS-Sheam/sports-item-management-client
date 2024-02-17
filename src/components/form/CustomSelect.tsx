@@ -11,6 +11,8 @@ type TCustomSelectProps = {
 const CustomSelect = ({ name, children, initialValue, required }: TCustomSelectProps) => {
   const { setValue } = useFormContext();
   useEffect(() => {
+    console.log("initialValue", initialValue);
+
     setValue(name, initialValue);
   }, [initialValue, name, setValue]);
   return (

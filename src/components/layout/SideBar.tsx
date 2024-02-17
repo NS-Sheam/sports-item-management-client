@@ -20,7 +20,7 @@ const Sidebar = () => {
 
   items.push({ key: "Logout", label: <div onClick={handleLogout}>Logout</div> });
   if (role === "superAdmin") {
-    items.push({ key: "Users", label: <NavLink to="/user">Admin</NavLink> });
+    items.push({ key: "Users", label: <NavLink to="/users">User</NavLink> });
   }
 
   return (

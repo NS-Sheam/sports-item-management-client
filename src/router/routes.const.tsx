@@ -31,7 +31,7 @@ export const routeItems = [
       {
         path: "/users",
         element: (
-          <PrivateRoute userRole={["admin"]}>
+          <PrivateRoute userRole={["superAdmin"]}>
             <UserManagement />
           </PrivateRoute>
         ),

@@ -21,6 +21,7 @@ const Inventory = () => {
             md={8}
             lg={6}
             key={item?._id}
+            className="w-full"
           >
             <Card
               size="default"

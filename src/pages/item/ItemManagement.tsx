@@ -15,6 +15,7 @@ import { TQueryParams, TResponse } from "../../types/global";
 import { TableRowSelection } from "antd/es/table/interface";
 import { ISalesData } from "../sale/SalesManagement";
 import PdfComponent from "../../components/PdfComponent";
+import { useAppSelector } from "../../redux/hooks";
 const ItemManagement = () => {
   const [params, setParams] = useState<TQueryParams[]>([]);
   const [page, setPage] = useState(1);
@@ -33,6 +34,7 @@ const ItemManagement = () => {
   const [isSellModalOpen, setIsSellModalOpen] = useState(false);
   const [invoiceModalOpen, setInvoiceModalOpen] = useState(false);
   const [saleData, setSaleData] = useState<ISalesData>();
+  const { role } = useAppSelector((state) => state.auth.user!);
 
   const handleDelete = async (id: string) => {
     const toastId = toast.loading("Loading...");
@@ -127,18 +129,21 @@ const ItemManagement = () => {
       setParams(queryParams);
     }
   };
+
   return (
     <div className="space-y-4">
       <h1 className="text-xl lg:text-2xl font-bold ">Item Management</h1>
-      <Button
-        onClick={() => {
-          setIsModalOpen(true);
-          setDefaultValue({} as TProduct);
-        }}
-        className="bg-blue-600 hover: hover:bg-white text-white hover:text-blue-600"
-      >
-        Add Product
-      </Button>
+      {role !== "seller" && (
+        <Button
+          onClick={() => {
+            setIsModalOpen(true);
+            setDefaultValue({} as TProduct);
+          }}
+          className="bg-blue-600 hover: hover:bg-white text-white hover:text-blue-600"
+        >
+          Add Product
+        </Button>
+      )}
       {selectedProductId.length > 0 && (
         <Button
           onClick={() => handleDelete("")}
