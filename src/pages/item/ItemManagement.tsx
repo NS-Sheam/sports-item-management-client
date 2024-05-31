@@ -1,25 +1,202 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useDeleteProductMutation, useGetProductsQuery } from "../../redux/features/product/productApi";
-import { Button, Pagination, Table, TableProps } from "antd";
-import ItemColumn from "../../components/ItemColumn";
-import { useState } from "react";
-import GenericItemModal from "../../components/modal/GenericItemModal";
-import { toast } from "sonner";
+// import { useDeleteProductMutation, useGetProductsQuery } from "../../redux/features/product/productApi";
+// import { Button, Pagination, Table, TableProps } from "antd";
+// import ItemColumn from "../../components/ItemColumn";
+// import { useState } from "react";
+// import GenericItemModal from "../../components/modal/GenericItemModal";
+// import { toast } from "sonner";
 import AddOrEditItemFrom from "../../components/form/AddOrEditItemForm";
-import { useAddSalesMutation } from "../../redux/features/sales/salesApi";
+// import { useAddSalesMutation } from "../../redux/features/sales/salesApi";
 
-import { FieldValues } from "react-hook-form";
+// import { FieldValues } from "react-hook-form";
+// import SalesFrom from "../../components/form/SalesFrom";
+// import { TProduct, TProductColumn, TSales } from "../../types";
+// import { TQueryParams, TResponse } from "../../types/global";
+// import { TableRowSelection } from "antd/es/table/interface";
+// import { ISalesData } from "../sale/SalesManagement";
+// import PdfComponent from "../../components/PdfComponent";
+// import { useAppSelector } from "../../redux/hooks";
+// const ItemManagement = () => {
+//   const { role, branch } = useAppSelector((state) => state.auth.user!);
+//   const [params, setParams] = useState<TQueryParams[]>([]);
+//   const [page, setPage] = useState(1);
+//   const { data: items, isLoading: productIsLoading } = useGetProductsQuery([
+//     { name: "page", value: page },
+//     { name: "limit", value: 5 },
+//     { name: "branch", value: role === "manager" ? branch! : "" },
+//     ...params,
+//   ]);
+
+//   const [modalType, setModalType] = useState<"add" | "edit">("add");
+//   const [isModalOpen, setIsModalOpen] = useState(false);
+//   const [defaultValue, setDefaultValue] = useState<TProduct>({} as TProduct);
+//   const [deleteProduct] = useDeleteProductMutation();
+//   const [addSales] = useAddSalesMutation();
+//   const [selectedProductId, setSelectedProductId] = useState<string[]>([]);
+//   const [isSellModalOpen, setIsSellModalOpen] = useState(false);
+//   const [invoiceModalOpen, setInvoiceModalOpen] = useState(false);
+//   const [saleData, setSaleData] = useState<ISalesData>();
+
+//   const handleDelete = async (id: string) => {
+//     const toastId = toast.loading("Loading...");
+//     try {
+//       if (selectedProductId.length > 0) {
+//         selectedProductId.forEach(async (id) => {
+//           await deleteProduct(id);
+//         });
+//       } else await deleteProduct(id);
+//       toast.success("Product deleted successfully!", {
+//         id: toastId,
+//         duration: 2000,
+//       });
+//     } catch (error) {
+//       toast.error("Something went wrong");
+//     }
+//   };
+//   const handleSell = async (data: FieldValues) => {
+//     const toastId = toast.loading("Loading...");
+//     data.product = defaultValue._id;
+//     data.quantity = Number(data.quantity);
+//     data.date = new Date(data.date).toISOString();
+//     try {
+//       const res = (await addSales(data)) as TResponse<TSales>;
+
+//       if (res?.error) {
+//         throw new Error((res as any)?.error?.data.message);
+//       }
+//       const salesModalData = {
+//         name: res.data!.name,
+//         product: defaultValue.name,
+//         price: defaultValue.price,
+//         date: data.date,
+//         quantity: data.quantity,
+//       } as ISalesData;
+
+//       setSaleData(salesModalData);
+//       setIsSellModalOpen(false);
+//       setInvoiceModalOpen(true);
+//       toast.success("Operation successfull!", {
+//         id: toastId,
+//         duration: 2000,
+//       });
+//     } catch (error: any) {
+//       toast.error(error.message);
+//     }
+//   };
+//   const columns = ItemColumn({
+//     setModalType,
+//     setIsModalOpen,
+//     setDefaultValue,
+//     handleDelete,
+//     setIsSellModalOpen,
+//   });
+//   const metaData = items?.meta;
+
+//   const productData = items?.data?.map((item: TProduct) => {
+//     return {
+//       _id: item._id,
+//       name: item.name,
+//       brand: item.brand,
+//       branch: item.branch,
+//       type: item.type,
+//       style: item.style,
+//       material: item.material,
+//       color: item.color,
+//       size: item.size,
+//       condition: item.condition,
+//       price: item.price,
+//       quantity: item.quantity,
+//       weight: item.weight,
+//       image: item?.image,
+//     };
+//   });
+
+//   const rowSelection: TableRowSelection<TProduct> = {
+//     onChange: (selectedRowKeys: React.Key[]) => {
+//       setSelectedProductId(selectedRowKeys.map(String));
+//     },
+//     type: "checkbox",
+//   };
+//   const onChange: TableProps<TProductColumn>["onChange"] = (_pagination, filters, _sorter, extra) => {
+//     if (extra.action === "filter") {
+//       const queryParams: TQueryParams[] = [];
+
+//       Object.keys(filters)?.forEach((item) => {
+//         filters[item]?.forEach((value) => {
+//           queryParams.push({ name: item, value });
+//         });
+//       });
+
+//       setParams(queryParams);
+//     }
+//   }
+
+import { useState, useEffect } from "react";
+import { useDeleteProductMutation, useGetProductsQuery } from "../../redux/features/product/productApi";
+import { Button, Pagination, Table, Tag, Modal, Select } from "antd";
+import ItemColumn from "../../components/ItemColumn";
+import { toast } from "sonner";
+import { useAddSalesMutation } from "../../redux/features/sales/salesApi";
 import SalesFrom from "../../components/form/SalesFrom";
+import PdfComponent from "../../components/PdfComponent";
+import { useAppSelector } from "../../redux/hooks";
 import { TProduct, TProductColumn, TSales } from "../../types";
 import { TQueryParams, TResponse } from "../../types/global";
 import { TableRowSelection } from "antd/es/table/interface";
 import { ISalesData } from "../sale/SalesManagement";
-import PdfComponent from "../../components/PdfComponent";
-import { useAppSelector } from "../../redux/hooks";
+import GenericItemModal from "../../components/modal/GenericItemModal";
+
+const { Option } = Select;
+
 const ItemManagement = () => {
   const { role, branch } = useAppSelector((state) => state.auth.user!);
   const [params, setParams] = useState<TQueryParams[]>([]);
   const [page, setPage] = useState(1);
+  const [selectedCurrency, setSelectedCurrency] = useState("USD"); // Default currency is USD
+  const exchangeRates = {
+    USD: { rate: 1, sign: "$" },
+    BDT: { rate: 85, sign: "৳" },
+    INR: { rate: 74, sign: "₹" },
+    EUR: { rate: 0.84, sign: "€" },
+    GBP: { rate: 0.74, sign: "£" },
+    JPY: { rate: 109.57, sign: "¥" },
+    AUD: { rate: 1.35, sign: "A$" },
+    CAD: { rate: 1.25, sign: "C$" },
+    CHF: { rate: 0.91, sign: "CHF" },
+    CNY: { rate: 6.45, sign: "¥" },
+    SEK: { rate: 8.61, sign: "kr" },
+    NZD: { rate: 1.43, sign: "NZ$" },
+    ZAR: { rate: 14.57, sign: "R" },
+  };
+
+  // Fetch exchange rates on component mount
+  // useEffect(() => {
+  //   fetchExchangeRates();
+  // }, [selectedCurrency]);
+
+  // const fetchExchangeRates = async () => {
+  //   // Fetch exchange rates from an API
+  //   try {
+  //     const response = await fetch("https://api.exchangeratesapi.io/latest");
+  //     const data = await response.json();
+  //     setExchangeRates(data.rates);
+  //   } catch (error) {
+  //     console.error("Error fetching exchange rates:", error);
+  //   }
+  // };
+
+  const handleCurrencyChange = (currency) => {
+    setSelectedCurrency(currency);
+  };
+
+  const convertPrice = (price) => {
+    const rate = exchangeRates[selectedCurrency].rate;
+    // const rate = 20;
+    console.log((price * rate).toFixed(2));
+
+    return price * rate;
+  };
+
   const { data: items, isLoading: productIsLoading } = useGetProductsQuery([
     { name: "page", value: page },
     { name: "limit", value: 5 },
@@ -53,7 +230,8 @@ const ItemManagement = () => {
       toast.error("Something went wrong");
     }
   };
-  const handleSell = async (data: FieldValues) => {
+
+  const handleSell = async (data: any) => {
     const toastId = toast.loading("Loading...");
     data.product = defaultValue._id;
     data.quantity = Number(data.quantity);
@@ -83,31 +261,21 @@ const ItemManagement = () => {
       toast.error(error.message);
     }
   };
+
   const columns = ItemColumn({
     setModalType,
     setIsModalOpen,
     setDefaultValue,
     handleDelete,
     setIsSellModalOpen,
+    currencySign: exchangeRates[selectedCurrency].sign,
   });
   const metaData = items?.meta;
 
   const productData = items?.data?.map((item: TProduct) => {
     return {
-      _id: item._id,
-      name: item.name,
-      brand: item.brand,
-      branch: item.branch,
-      type: item.type,
-      style: item.style,
-      material: item.material,
-      color: item.color,
-      size: item.size,
-      condition: item.condition,
-      price: item.price,
-      quantity: item.quantity,
-      weight: item.weight,
-      image: item?.image,
+      ...item,
+      price: convertPrice(item?.price),
     };
   });
 
@@ -117,7 +285,8 @@ const ItemManagement = () => {
     },
     type: "checkbox",
   };
-  const onChange: TableProps<TProductColumn>["onChange"] = (_pagination, filters, _sorter, extra) => {
+
+  const onChange = (_pagination, filters, _sorter, extra) => {
     if (extra.action === "filter") {
       const queryParams: TQueryParams[] = [];
 
@@ -134,6 +303,22 @@ const ItemManagement = () => {
   return (
     <div className="space-y-4">
       <h1 className="text-xl lg:text-2xl font-bold ">Item Management</h1>
+      <div style={{ marginBottom: "1rem" }}>
+        <Select
+          value={selectedCurrency}
+          onChange={handleCurrencyChange}
+        >
+          <Option value="USD">USD</Option>
+          <Option value="BDT">BDT</Option>
+          <Option value="INR">INR</Option>
+          <Option value="EUR">EUR</Option>
+          <Option value="GBP">GBP</Option>
+          <Option value="AUD">AUD</Option>
+          <Option value="JPY">JPY</Option>
+          <Option value="CNY">CNY</Option>
+          <Option value="MXN">MXN</Option>
+        </Select>
+      </div>
       {role !== "seller" && (
         <Button
           onClick={() => {

@@ -20,8 +20,10 @@ const ItemColumn = ({
   setDefaultValue,
   handleDelete,
   setIsSellModalOpen,
+  currencySign,
 }: TItemColumnProps) => {
   const { token } = useAppSelector((state) => state.auth);
+  console.log(currencySign);
 
   const user = jwtDecode(token as string) as TUser;
   const { role } = user;
@@ -50,7 +52,13 @@ const ItemColumn = ({
     if (column?.sort) {
       returnableColumn.sorter = (a, b) => a.price - b.price;
       returnableColumn.render = (value) =>
-        typeof value === "string" || (typeof value === "number" && <span>${value}</span>);
+        typeof value === "string" ||
+        (typeof value === "number" && (
+          <span>
+            {currencySign}
+            {value}
+          </span>
+        ));
     }
     if (column?.actions) {
       returnableColumn.render = (_, record) => (

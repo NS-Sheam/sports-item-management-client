@@ -55,7 +55,10 @@ const UserManagement = () => {
   const handleUserRole: SubmitHandler<FieldValues> = async (data) => {
     const toastId = toast.loading("Updating user role...");
     try {
+      console.log(data);
+
       const res = (await updateUserRole({ id: user?._id, data: data })) as TResponse<TUser>;
+
       if (!res.error) {
         toast.success("User role updated successfully!", {
           id: toastId,

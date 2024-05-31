@@ -7,8 +7,9 @@ type TInputProps = {
   required?: boolean;
   initialValue?: string | number;
   readOnly?: boolean;
+  disabled?: boolean;
 };
-const CustomInput = ({ type, name, required, initialValue, readOnly }: TInputProps) => {
+const CustomInput = ({ type, name, required, initialValue, readOnly, disabled }: TInputProps) => {
   const { setValue } = useFormContext();
   useEffect(() => {
     setValue(name, initialValue);
@@ -17,6 +18,7 @@ const CustomInput = ({ type, name, required, initialValue, readOnly }: TInputPro
     <Controller
       name={name}
       defaultValue={initialValue}
+      disabled={disabled}
       render={({ field }) => (
         <Input
           readOnly={readOnly}
