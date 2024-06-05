@@ -51,7 +51,11 @@ const ItemManagement = () => {
     return price * rate || 0;
   };
 
-  const { data: items, isLoading: productIsLoading } = useGetProductsQuery([
+  const {
+    data: items,
+    isLoading: productIsLoading,
+    isFetching: productIsFetching,
+  } = useGetProductsQuery([
     { name: "page", value: page },
     { name: "limit", value: 5 },
     { name: "branch", value: role === "manager" ? branch! : "" },
@@ -219,7 +223,7 @@ const ItemManagement = () => {
         columns={columns}
         dataSource={productData}
         rowKey="_id"
-        loading={productIsLoading}
+        loading={productIsLoading || productIsFetching}
         pagination={false}
       />
       <Pagination
