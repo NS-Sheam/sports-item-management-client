@@ -51,8 +51,8 @@ const Login = () => {
         duration: 2000,
       });
       navigate("/");
-    } catch (error) {
-      toast.error("Something went wrong");
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Something went wrong");
     }
   };
 

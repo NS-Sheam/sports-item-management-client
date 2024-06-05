@@ -85,6 +85,11 @@ export const productColumnsItem: TProductColumnItem[] = [
     filteredData: ProductStyles,
   },
   {
+    title: "Brand",
+    dataIndex: "brand",
+    width: "6%",
+  },
+  {
     title: "Price",
     dataIndex: "price",
     width: "8%",
