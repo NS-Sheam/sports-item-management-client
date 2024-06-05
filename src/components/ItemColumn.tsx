@@ -11,6 +11,7 @@ type TItemColumnProps = {
   setIsModalOpen: (value: boolean) => void;
   setDefaultValue: React.Dispatch<SetStateAction<TProduct>>;
   handleDelete: (id: string) => Promise<void>;
+  currencySign: string;
 
   setIsSellModalOpen: React.Dispatch<SetStateAction<boolean>>;
 };
@@ -23,8 +24,6 @@ const ItemColumn = ({
   currencySign,
 }: TItemColumnProps) => {
   const { token } = useAppSelector((state) => state.auth);
-  console.log(currencySign);
-
   const user = jwtDecode(token as string) as TUser;
   const { role } = user;
 

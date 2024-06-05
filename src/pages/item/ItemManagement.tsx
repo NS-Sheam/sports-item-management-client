@@ -145,6 +145,7 @@ import { TQueryParams, TResponse } from "../../types/global";
 import { TableRowSelection } from "antd/es/table/interface";
 import { ISalesData } from "../sale/SalesManagement";
 import GenericItemModal from "../../components/modal/GenericItemModal";
+import Search from "antd/es/input/Search";
 
 const { Option } = Select;
 
@@ -152,7 +153,8 @@ const ItemManagement = () => {
   const { role, branch } = useAppSelector((state) => state.auth.user!);
   const [params, setParams] = useState<TQueryParams[]>([]);
   const [page, setPage] = useState(1);
-  const [selectedCurrency, setSelectedCurrency] = useState("USD"); // Default currency is USD
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [selectedCurrency, setSelectedCurrency] = useState<string>("USD"); // Default currency is USD
   const exchangeRates = {
     USD: { rate: 1, sign: "$" },
     BDT: { rate: 85, sign: "৳" },
@@ -169,40 +171,25 @@ const ItemManagement = () => {
     ZAR: { rate: 14.57, sign: "R" },
   };
 
-  // Fetch exchange rates on component mount
-  // useEffect(() => {
-  //   fetchExchangeRates();
-  // }, [selectedCurrency]);
-
-  // const fetchExchangeRates = async () => {
-  //   // Fetch exchange rates from an API
-  //   try {
-  //     const response = await fetch("https://api.exchangeratesapi.io/latest");
-  //     const data = await response.json();
-  //     setExchangeRates(data.rates);
-  //   } catch (error) {
-  //     console.error("Error fetching exchange rates:", error);
-  //   }
-  // };
-
-  const handleCurrencyChange = (currency) => {
+  const handleCurrencyChange = (currency: string) => {
     setSelectedCurrency(currency);
   };
 
   const convertPrice = (price) => {
     const rate = exchangeRates[selectedCurrency].rate;
     // const rate = 20;
-    console.log((price * rate).toFixed(2));
 
-    return price * rate;
+    return price * rate || 0;
   };
 
   const { data: items, isLoading: productIsLoading } = useGetProductsQuery([
     { name: "page", value: page },
     { name: "limit", value: 5 },
     { name: "branch", value: role === "manager" ? branch! : "" },
+    { name: "searchTerm", value: searchTerm },
     ...params,
   ]);
+  console.log(items);
 
   const [modalType, setModalType] = useState<"add" | "edit">("add");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -286,7 +273,7 @@ const ItemManagement = () => {
     type: "checkbox",
   };
 
-  const onChange = (_pagination, filters, _sorter, extra) => {
+  const onChange = (_pagination: any, filters: any, _sorter: any, extra: any) => {
     if (extra.action === "filter") {
       const queryParams: TQueryParams[] = [];
 
@@ -296,6 +283,14 @@ const ItemManagement = () => {
         });
       });
 
+      setParams(queryParams);
+    }
+    if (extra.action === "sort") {
+      const queryParams: TQueryParams[] = [];
+      const sorter = _sorter as any;
+      if (sorter.order) {
+        queryParams.push({ name: "sort", value: sorter.order === "ascend" ? "-price" : "price" });
+      }
       setParams(queryParams);
     }
   };
@@ -338,6 +333,13 @@ const ItemManagement = () => {
           Delete Product
         </Button>
       )}
+      <div>
+        <Search
+          style={{ width: "20rem" }}
+          placeholder="Search"
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
       <Table
         rowSelection={{
           type: "checkbox",
