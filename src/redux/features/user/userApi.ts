@@ -1,13 +1,23 @@
-import { TResponse } from "../../../types/global";
+import { TQueryParams, TResponse } from "../../../types/global";
 import { baseApi } from "../../api/baseApi";
 
 const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllUsers: builder.query({
-      query: () => ({
-        url: "/users",
-        method: "GET",
-      }),
+      query: (args: TQueryParams[]) => {
+        const params = new URLSearchParams();
+
+        if (args) {
+          args.forEach((item) => {
+            params.append(item.name, item.value as string);
+          });
+        }
+        return {
+          url: "/users",
+          method: "GET",
+          params,
+        };
+      },
       providesTags: ["user"],
       transformResponse: (response: TResponse<any>) => response.data,
     }),

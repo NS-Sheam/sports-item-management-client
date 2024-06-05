@@ -10,12 +10,14 @@ import { TResponse } from "../../types/global";
 import { TUser } from "../../types";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import CustomSelectWithWatch from "../../components/form/CustomSelectWithWatch";
+import Search from "antd/es/input/Search";
 const UserManagement = () => {
-  const { data: userData, isLoading: isUserLoading } = useGetAllUsersQuery(undefined);
   const [updateUserRole] = useUpdateUserRoleMutation();
   const [userRole, setUserRole] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [user, setUser] = useState<TUser>();
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const { data: userData, isLoading: isUserLoading } = useGetAllUsersQuery([{ name: "searchTerm", value: searchTerm }]);
 
   const columns = [
     {
@@ -77,6 +79,13 @@ const UserManagement = () => {
   return (
     <div className="space-y-4">
       <h1 className="text-xl lg:text-2xl font-bold ">Users Management</h1>
+      <div>
+        <Search
+          style={{ width: "20rem" }}
+          placeholder="Search"
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
       <Table
         scroll={{ x: 400 }}
         columns={columns as any}
