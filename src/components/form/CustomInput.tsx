@@ -8,8 +8,9 @@ type TInputProps = {
   initialValue?: string | number;
   readOnly?: boolean;
   disabled?: boolean;
+  className?: string;
 };
-const CustomInput = ({ type, name, required, initialValue, readOnly, disabled }: TInputProps) => {
+const CustomInput = ({ type, name, required, initialValue, readOnly, disabled, className }: TInputProps) => {
   const { setValue } = useFormContext();
   useEffect(() => {
     setValue(name, initialValue);
@@ -21,6 +22,7 @@ const CustomInput = ({ type, name, required, initialValue, readOnly, disabled }:
       disabled={disabled}
       render={({ field }) => (
         <Input
+          className={`w-full px-2 ${className}`}
           readOnly={readOnly}
           {...field}
           type={type}

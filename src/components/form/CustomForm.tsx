@@ -4,8 +4,9 @@ import { FieldValues, FormProvider, SubmitHandler, useForm } from "react-hook-fo
 type TFormProps = {
   onSubmit: SubmitHandler<FieldValues>;
   children: ReactNode;
+  className?: string;
 };
-const CustomForm = ({ onSubmit, children }: TFormProps) => {
+const CustomForm = ({ onSubmit, children, className }: TFormProps) => {
   const methods = useForm();
   const submit: SubmitHandler<FieldValues> = (data) => {
     onSubmit(data);
@@ -14,7 +15,12 @@ const CustomForm = ({ onSubmit, children }: TFormProps) => {
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={methods.handleSubmit(submit)}>{children}</form>
+      <form
+        className={className}
+        onSubmit={methods.handleSubmit(submit)}
+      >
+        {children}
+      </form>
     </FormProvider>
   );
 };

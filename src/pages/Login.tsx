@@ -9,6 +9,8 @@ import { setUser } from "../redux/features/auth/authSlice";
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { FaGoogle } from "react-icons/fa";
+
 type TUserData = {
   email: string;
   password: string;
@@ -21,6 +23,8 @@ const Login = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [register, setRegister] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const onSubmit = async (data: FieldValues) => {
     const toastId = toast.loading("Loading...");
     try {
@@ -33,10 +37,11 @@ const Login = () => {
         userData.name = data.name;
       }
 
-      register && (await registerUser(userData));
+      if (register) {
+        await registerUser(userData);
+      }
 
       const loggedUser = await login(userData).unwrap();
-
       const decodedUser = jwtDecode(loggedUser.data.token);
 
       dispatch(
@@ -53,86 +58,116 @@ const Login = () => {
       navigate("/");
     } catch (error: any) {
       toast.error(error?.data?.message || "Something went wrong");
+      setError(error?.data?.message || "Something went wrong");
     }
   };
 
   return (
-    <>
-      <div className="flex items-center justify-center min-h-screen bg-yellow-50 ">
-        <div className="grid grid-cols-1 lg:grid-cols-2 justify-center items-center gap-6 lg:gap-20 h-full w-full lg:w-[calc(100vw-30vw)] lg:h-[calc(100vh-20vh)] bg-yellow-400 rounded-3xl p-6 relative">
-          <div className="absolute h-full w-1/2 left-0 top-0 bg-white rounded-r-3xl hidden lg:flex"></div>
-          <div className="space-y-2 text-center z-10">
-            <h1 className=" text-4xl font-bold">Sportiz</h1>
-
-            <p className="text-xl text-left">
-              Taking the victory lap in sports item management – where every goal is neatly organized and every play is
-              a well-managed display!
-            </p>
-            <div
-              className="hidden lg:block cursor-pointer px-3 py-3 text-2xl bg-yellow-400 w-24 mx-auto rounded-md font-bold text-white"
+    <div className="inner-container py-4 flex justify-center items-center min-h-screen relative bg-yellow-50">
+      <div
+        className={`rounded-3xl shadow-2xl border-white bg-slate-200 border-2 auth-container ${
+          register ? "sign-up" : "login"
+        }`}
+      >
+        <div className="background-panel z-10 shadow-md space-y-3">
+          <h3 className="text-black text-2xl font-bold text-center">
+            {!register ? "Don't have an account?" : "Login to existing account"}
+          </h3>
+          <div className="flex flex-col gap-4 items-center justify-center">
+            <button
               onClick={() => setRegister(!register)}
+              className="w-48 bg-white text-black rounded-md shadow-md p-2 font-bold"
             >
-              {!register ? "Register" : "Login"}
-            </div>
-          </div>
-          <div className="space-y-3">
-            <CustomForm onSubmit={onSubmit}>
-              {register && (
-                <Form.Item label="Name">
-                  <CustomInput
-                    type="text"
-                    name="name"
-                    required={true}
-                  />
-                </Form.Item>
-              )}
-              <Form.Item label="Email">
-                <CustomInput
-                  type="email"
-                  name="email"
-                  required={true}
-                />
-              </Form.Item>
-
-              <Form.Item label="Password">
-                <CustomInput
-                  type="password"
-                  name="password"
-                  required={true}
-                />
-              </Form.Item>
-
-              <Form.Item>
-                <Row
-                  justify="end"
-                  gutter={[8, 8]}
-                >
-                  <Col span={24}>
-                    <Button
-                      htmlType="submit"
-                      className="w-24 "
-                    >
-                      {!register ? "Login" : "Register"}
-                    </Button>
-                  </Col>
-                  <Col
-                    span={24}
-                    className="lg:hidden"
-                  >
-                    <Button
-                      type="link"
-                      onClick={() => setRegister(!register)}
-                    >
-                      {!register ? "Don't have an account? Register here" : "Already have an account? Login here"}
-                    </Button>
-                  </Col>
-                </Row>
-              </Form.Item>
-            </CustomForm>
+              {register ? "Login" : "Sign Up"}
+            </button>
+            <button className="w-48 bg-white text-black rounded-md shadow-md p-2 font-bold flex items-center justify-center gap-2">
+              <FaGoogle /> Login With Google
+            </button>
           </div>
         </div>
+        <div
+          className={` absolute form-panel w-1/2 h-full ${
+            register ? "top-0 left-0" : "top-0 right-0"
+          } flex flex-col items-center justify-center gap-3`}
+        >
+          <CustomForm
+            className="w-full flex  flex-col gap-4 items-center justify-center "
+            onSubmit={onSubmit}
+          >
+            <div className="text-4xl font-extrabold text-center text-black">
+              Sporti<span className="text-yellow-400">Z</span>
+            </div>
+            {register && (
+              <Form.Item
+                label="Name"
+                className="w-full px-6"
+              >
+                <CustomInput
+                  type="text"
+                  name="name"
+                  className="p-2"
+                  required={true}
+                />
+              </Form.Item>
+            )}
+            <Form.Item
+              label="Email"
+              className="w-full px-6"
+            >
+              <CustomInput
+                type="email"
+                name="email"
+                className="p-2"
+                required={true}
+              />
+            </Form.Item>
+            <Form.Item
+              label="Password"
+              className="w-full px-6"
+            >
+              <CustomInput
+                type="password"
+                name="password"
+                className="p-2"
+                required={true}
+              />
+            </Form.Item>
+            <Form.Item>
+              <Row
+                justify="end"
+                gutter={[8, 8]}
+              >
+                <Col span={24}>
+                  <Button
+                    htmlType="submit"
+                    size="large"
+                    className="w-32 bg-yellow-400 rounded-md shadow-md font-bold"
+                  >
+                    {!register ? "Login" : "Register"}
+                  </Button>
+                </Col>
+                {error && (
+                  <Col span={24}>
+                    <p className="text-red-500">{error}</p>
+                  </Col>
+                )}
+                <Col
+                  span={24}
+                  className="lg:hidden"
+                >
+                  <Button
+                    type="link"
+                    onClick={() => setRegister(!register)}
+                  >
+                    {!register ? "Don't have an account? Register here" : "Already have an account? Login here"}
+                  </Button>
+                </Col>
+              </Row>
+            </Form.Item>
+          </CustomForm>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 
