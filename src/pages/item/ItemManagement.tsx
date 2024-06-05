@@ -187,9 +187,9 @@ const ItemManagement = () => {
     { name: "limit", value: 5 },
     { name: "branch", value: role === "manager" ? branch! : "" },
     { name: "searchTerm", value: searchTerm },
+
     ...params,
   ]);
-  console.log(items);
 
   const [modalType, setModalType] = useState<"add" | "edit">("add");
   const [isModalOpen, setIsModalOpen] = useState(false);
