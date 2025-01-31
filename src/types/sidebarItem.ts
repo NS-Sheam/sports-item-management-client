@@ -5,11 +5,13 @@ export type TItemRoutes = {
   path: string;
   element?: ReactNode;
   children?: TItemRoutes[];
+  icon?: ReactNode;
 };
 
 export type TSidebarItem = {
   key: string;
   label: ReactNode;
+  icon?: ReactNode;
 };
 
 export type TRoutes = {

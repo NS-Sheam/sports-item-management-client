@@ -18,6 +18,44 @@ type TUserData = {
 };
 
 const Login = () => {
+  const userCredentials: { [key: string]: TUserData } = {
+    admin: {
+      name: "Admin",
+      email: "sakib@gmail.com",
+      password: "123456",
+    },
+    manager1: {
+      name: "Manager 1",
+      email: "manager1@gmail.com",
+      password: "123456",
+    },
+    manager2: {
+      name: "Manager 2",
+      email: "manager2@gmail.com",
+      password: "123456",
+    },
+    manager3: {
+      name: "Manager 3",
+      email: "manager3@gmail.com",
+      password: "123456",
+    },
+    seller1: {
+      name: "Seller 1",
+      email: "seller1@gmail.com",
+      password: "123456",
+    },
+    seller2: {
+      name: "Seller 2",
+      email: "seller2@gmail.com",
+      password: "123456",
+    },
+    seller3: {
+      name: "Seller 3",
+      email: "seller3@gmail.com",
+      password: "123456",
+    },
+  };
+
   const [login] = useLoginMutation();
   const [registerUser] = useRegisterUserMutation();
   const dispatch = useAppDispatch();
@@ -28,10 +66,10 @@ const Login = () => {
   const onSubmit = async (data: FieldValues) => {
     const toastId = toast.loading("Loading...");
     try {
-      const userData: TUserData = {
+      const userData = {
         email: data.email,
         password: data.password,
-      };
+      } as TUserData;
 
       if (register) {
         userData.name = data.name;
@@ -63,7 +101,7 @@ const Login = () => {
   };
 
   return (
-    <div className="inner-container py-4 flex justify-center items-center min-h-screen relative bg-yellow-50">
+    <div className=" inner-container py-4 flex justify-center items-center min-h-screen relative bg-yellow-50">
       <div
         className={`rounded-3xl shadow-2xl border-white bg-slate-200 border-2 auth-container ${
           register ? "sign-up" : "login"
@@ -91,7 +129,7 @@ const Login = () => {
           } flex flex-col items-center justify-center gap-3`}
         >
           <CustomForm
-            className="w-full flex  flex-col gap-4 items-center justify-center "
+            className="w-full flex  flex-col gap-2 items-center justify-center "
             onSubmit={onSubmit}
           >
             <div className="text-4xl font-extrabold text-center text-black">
@@ -132,36 +170,37 @@ const Login = () => {
                 required={true}
               />
             </Form.Item>
-            <Form.Item>
+            {error && <p className="text-red-500 text-center font-medium">{error}</p>}
+            <Form.Item className="w-full px-6">
               <Row
-                justify="end"
+                justify="start"
                 gutter={[8, 8]}
               >
                 <Col span={24}>
+                  {error && <p className="text-red-500 text-center font-medium">{error}</p>}
                   <Button
                     htmlType="submit"
                     size="large"
-                    className="w-32 bg-yellow-400 rounded-md shadow-md font-bold"
+                    style={{ transition: "none", transform: "none" }}
+                    className="w-full bg-yellow-400 rounded-md shadow-md font-bold block"
                   >
                     {!register ? "Login" : "Register"}
                   </Button>
                 </Col>
-                {error && (
-                  <Col span={24}>
-                    <p className="text-red-500">{error}</p>
+                {Object.keys(userCredentials).map((key) => (
+                  <Col span={8}>
+                    <Button
+                      type="dashed"
+                      key={key}
+                      onClick={() => {
+                        onSubmit(userCredentials[key]);
+                      }}
+                      className="w-full border-2 border-yellow-400 rounded-md shadow-md font-bold"
+                    >
+                      {key}
+                    </Button>
                   </Col>
-                )}
-                <Col
-                  span={24}
-                  className="lg:hidden"
-                >
-                  <Button
-                    type="link"
-                    onClick={() => setRegister(!register)}
-                  >
-                    {!register ? "Don't have an account? Register here" : "Already have an account? Login here"}
-                  </Button>
-                </Col>
+                ))}
               </Row>
             </Form.Item>
           </CustomForm>

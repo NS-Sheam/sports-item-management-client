@@ -4,6 +4,12 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap");
 
+:root {
+  --primary-color: #93278f;
+  --secondary-color: #ffd700;
+  --sb-size: 10px;
+}
+
 body {
   font-family: "Roboto Condensed", sans-serif;
   margin: 0;
@@ -65,7 +71,63 @@ body {
 .login .form-panel {
   transform: translateX(0%);
 }
-label {
-  font-size: 1.5rem !important;
+.auth-container label {
+  font-size: 1 !important;
   font-weight: 500;
+}
+
+.ant-form-item {
+  margin: 0.5rem !important;
+}
+
+.ant-menu-item-selected {
+  background-color: var(--primary-color) !important; /* Change the background color */
+  color: white !important; /* Change the text color */
+}
+
+.ant-menu-item-selected .anticon {
+  color: white !important; /* Change the icon color */
+}
+/* Custom CSS to change the collapse icon color */
+.custom-sider .ant-layout-sider-trigger {
+  background-color: var(--primary-color) !important;
+  color: #fff !important;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px; /* Thin scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #f0f0f0; /* Light grey track */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color); /* Stylish purple color */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #751e6e; /* Slightly darker on hover */
+}
+
+/* Sidebar Scrollbar */
+.custom-sider {
+  scrollbar-width: thin; /* Firefox support */
+  scrollbar-color: var(--primary-color) #f0f0f0; /* Thumb and track colors */
+}
+
+.custom-sider::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-sider::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 10px;
+}
+
+.custom-sider::-webkit-scrollbar-thumb:hover {
+  background: #751e6e;
 }

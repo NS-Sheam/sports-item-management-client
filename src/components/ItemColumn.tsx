@@ -55,7 +55,7 @@ const ItemColumn = ({
         (typeof value === "number" && (
           <span>
             {currencySign}
-            {value}
+            {value.toFixed(2)}
           </span>
         ));
     }
