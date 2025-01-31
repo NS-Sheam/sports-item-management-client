@@ -5,6 +5,7 @@ import { TProduct } from "../../types";
 import GenericItemModal from "../../components/modal/GenericItemModal";
 
 import CustomPagination from "../../components/form/CustomPagination";
+import { EditOutlined } from "@ant-design/icons";
 
 const ProductManagement = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -59,15 +60,14 @@ const ProductManagement = () => {
           style={{
             background: "#93278f",
             color: "#fff",
-            width: "5rem",
           }}
+          size="small"
+          icon={<EditOutlined />}
           onClick={() => {
             setSelectedProduct(item);
             setIsModalOpen(true);
           }}
-        >
-          Edit
-        </Button>
+        />
       ),
     },
   ];
