@@ -3,7 +3,7 @@ import AddOrEditItemFrom from "../../components/form/AddOrEditItemForm";
 
 import { useState } from "react";
 import { useDeleteProductMutation, useGetProductsQuery } from "../../redux/features/product/productApi";
-import { Button, Pagination, Table, Select } from "antd";
+import { Button, Table, Select, Popconfirm } from "antd";
 import ItemColumn from "../../components/ItemColumn";
 import { toast } from "sonner";
 import { useAddSalesMutation } from "../../redux/features/sales/salesApi";
@@ -16,6 +16,7 @@ import { TableRowSelection } from "antd/es/table/interface";
 import { ISalesData } from "../sale/SalesManagement";
 import GenericItemModal from "../../components/modal/GenericItemModal";
 import Search from "antd/es/input/Search";
+import CustomPagination from "../../components/form/CustomPagination";
 
 const { Option } = Select;
 
@@ -57,7 +58,7 @@ const ItemManagement = () => {
     isFetching: productIsFetching,
   } = useGetProductsQuery([
     { name: "page", value: page },
-    { name: "limit", value: 5 },
+    { name: "limit", value: 10 },
     { name: "branch", value: role === "manager" ? branch! : "" },
     { name: "searchTerm", value: searchTerm },
 
@@ -77,15 +78,22 @@ const ItemManagement = () => {
   const handleDelete = async (id: string) => {
     const toastId = toast.loading("Loading...");
     try {
+      let res;
       if (selectedProductId.length > 0) {
         selectedProductId.forEach(async (id) => {
-          await deleteProduct(id);
+          res = (await deleteProduct(id)) as TResponse<TProduct>;
         });
-      } else await deleteProduct(id);
-      toast.success("Product deleted successfully!", {
-        id: toastId,
-        duration: 2000,
-      });
+      } else {
+        res = (await deleteProduct(id)) as TResponse<TProduct>;
+      }
+      if (!res?.error) {
+        toast.success("Product Deleted successfully!", {
+          id: toastId,
+          duration: 2000,
+        });
+      } else {
+        toast.error(res?.error.data?.message || "Something went wrong");
+      }
     } catch (error) {
       toast.error("Something went wrong");
     }
@@ -130,7 +138,7 @@ const ItemManagement = () => {
     setIsSellModalOpen,
     currencySign: exchangeRates[selectedCurrency as keyof typeof exchangeRates].sign,
   });
-  const metaData = items?.meta;
+  const meta = items?.meta;
 
   const productData = items?.data?.map((item: TProduct) => {
     return {
@@ -170,42 +178,57 @@ const ItemManagement = () => {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-xl lg:text-2xl font-bold ">Item Management</h1>
-      <div style={{ marginBottom: "1rem" }}>
-        <Select
-          value={selectedCurrency}
-          onChange={handleCurrencyChange}
-        >
-          <Option value="USD">USD</Option>
-          <Option value="BDT">BDT</Option>
-          <Option value="INR">INR</Option>
-          <Option value="EUR">EUR</Option>
-          <Option value="GBP">GBP</Option>
-          <Option value="AUD">AUD</Option>
-          <Option value="JPY">JPY</Option>
-          <Option value="CNY">CNY</Option>
-          <Option value="MXN">MXN</Option>
-        </Select>
-      </div>
+      <h1 className="text-xl lg:text-2xl font-bold text-primary">Item Management</h1>
       {role !== "seller" && (
         <Button
+          style={{
+            background: "#93278f",
+            color: "#fff",
+            width: "8rem",
+            marginRight: "0.5rem",
+          }}
           onClick={() => {
             setIsModalOpen(true);
             setDefaultValue({} as TProduct);
+            setModalType("add");
           }}
-          className="bg-blue-600 hover: hover:bg-white text-white hover:text-blue-600"
         >
           Add Product
         </Button>
       )}
+
       {selectedProductId.length > 0 && (
-        <Button
-          onClick={() => handleDelete("")}
-          className="bg-red-600 hover: hover:bg-white text-white hover:text-red-600"
+        <Popconfirm
+          title="Are you sure to delete selected products?"
+          onConfirm={() => handleDelete("")}
+          okText="Yes"
+          cancelText="No"
         >
-          Delete Product
-        </Button>
+          <Button
+            style={{
+              marginRight: "0.5rem",
+            }}
+            className="bg-red-600 hover: hover:bg-white text-white hover:text-red-600"
+          >
+            Delete Product
+          </Button>
+        </Popconfirm>
       )}
+      <Select
+        value={selectedCurrency}
+        onChange={handleCurrencyChange}
+        style={{ width: "8rem" }}
+      >
+        <Option value="USD">USD</Option>
+        <Option value="BDT">BDT</Option>
+        <Option value="INR">INR</Option>
+        <Option value="EUR">EUR</Option>
+        <Option value="GBP">GBP</Option>
+        <Option value="AUD">AUD</Option>
+        <Option value="JPY">JPY</Option>
+        <Option value="CNY">CNY</Option>
+        <Option value="MXN">MXN</Option>
+      </Select>
       <div>
         <Search
           style={{ width: "20rem" }}
@@ -226,15 +249,21 @@ const ItemManagement = () => {
         loading={productIsLoading || productIsFetching}
         pagination={false}
       />
-      <Pagination
-        style={{ marginTop: "1rem" }}
-        current={page}
-        onChange={(value) => setPage(value)}
-        total={metaData?.total}
-        pageSize={metaData?.limit}
+      <CustomPagination
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          padding: "1rem",
+        }}
+        page={page}
+        setPage={setPage}
+        total={meta?.total}
+        pageSize={meta?.limit}
       />
       <GenericItemModal
-        title="Add Product"
+        width={800}
+        title={modalType === "add" ? "Add Product" : "Edit Product"}
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
       >

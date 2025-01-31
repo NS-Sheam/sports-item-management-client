@@ -16,6 +16,7 @@ import { FieldValues } from "react-hook-form";
 import { toast } from "sonner";
 import { TProduct } from "../../types";
 import { useAppSelector } from "../../redux/hooks";
+import { TResponse } from "../../types/global";
 
 type TAddOrEditItemFormProps = {
   defaultValues: TProduct & { key?: string };
@@ -37,6 +38,7 @@ const AddOrEditItemForm = ({ defaultValues, modalType, setIsModalOpen }: TAddOrE
     formData.append("image", data?.image?.file?.originFileObj);
 
     try {
+      let res;
       if (modalType === "add") {
         const imageRes = await fetch(img_hosting_url, {
           method: "POST",
@@ -45,15 +47,18 @@ const AddOrEditItemForm = ({ defaultValues, modalType, setIsModalOpen }: TAddOrE
         const imageData = await imageRes.json();
         const imageUrl = imageData?.data?.display_url;
         data.image = imageUrl;
-
-        await createProduct(data);
+        res = (await createProduct(data)) as TResponse<TProduct>;
       } else {
-        await updateProduct({ id: defaultValues?._id, updatedProduct: data });
+        res = (await updateProduct({ id: defaultValues?._id, updatedProduct: data })) as TResponse<TProduct>;
       }
-      toast.success("Operation successfull!", {
-        id: toastId,
-        duration: 2000,
-      });
+      if (!res.error) {
+        toast.success("User role updated successfully!", {
+          id: toastId,
+          duration: 2000,
+        });
+      } else {
+        toast.error(res.error.data?.message || "Something went wrong");
+      }
     } catch (error) {
       toast.error("Something went wrong");
     }
@@ -62,7 +67,10 @@ const AddOrEditItemForm = ({ defaultValues, modalType, setIsModalOpen }: TAddOrE
   return (
     <CustomForm onSubmit={onSubmit}>
       <Row gutter={[2, 2]}>
-        <Col span={12}>
+        <Col
+          span={12}
+          md={8}
+        >
           <Form.Item
             label="Name"
             name="name"
@@ -75,7 +83,10 @@ const AddOrEditItemForm = ({ defaultValues, modalType, setIsModalOpen }: TAddOrE
             />
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col
+          span={12}
+          md={8}
+        >
           <Form.Item
             label="Brand"
             name="brand"
@@ -88,7 +99,10 @@ const AddOrEditItemForm = ({ defaultValues, modalType, setIsModalOpen }: TAddOrE
             />
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col
+          span={12}
+          md={8}
+        >
           <Form.Item
             label="Branch"
             name="branch"
@@ -102,7 +116,10 @@ const AddOrEditItemForm = ({ defaultValues, modalType, setIsModalOpen }: TAddOrE
             />
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col
+          span={12}
+          md={8}
+        >
           <Form.Item
             label="Type"
             name="type"
@@ -123,7 +140,10 @@ const AddOrEditItemForm = ({ defaultValues, modalType, setIsModalOpen }: TAddOrE
             </CustomSelect>
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col
+          span={12}
+          md={8}
+        >
           <Form.Item
             label="Material"
             name="material"
@@ -145,7 +165,10 @@ const AddOrEditItemForm = ({ defaultValues, modalType, setIsModalOpen }: TAddOrE
           </Form.Item>
         </Col>
 
-        <Col span={12}>
+        <Col
+          span={12}
+          md={8}
+        >
           <Form.Item
             label="Color"
             name="color"
@@ -166,7 +189,10 @@ const AddOrEditItemForm = ({ defaultValues, modalType, setIsModalOpen }: TAddOrE
             </CustomSelect>
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col
+          span={12}
+          md={8}
+        >
           <Form.Item
             label="Size"
             name="size"
@@ -187,7 +213,10 @@ const AddOrEditItemForm = ({ defaultValues, modalType, setIsModalOpen }: TAddOrE
             </CustomSelect>
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col
+          span={12}
+          md={8}
+        >
           <Form.Item
             label="Condition"
             name="condition"
@@ -208,7 +237,10 @@ const AddOrEditItemForm = ({ defaultValues, modalType, setIsModalOpen }: TAddOrE
             </CustomSelect>
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col
+          span={12}
+          md={8}
+        >
           <Form.Item
             label="Price"
             name="price"
@@ -221,7 +253,10 @@ const AddOrEditItemForm = ({ defaultValues, modalType, setIsModalOpen }: TAddOrE
             />
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col
+          span={12}
+          md={8}
+        >
           <Form.Item
             label="Quantity"
             name="quantity"
@@ -234,7 +269,10 @@ const AddOrEditItemForm = ({ defaultValues, modalType, setIsModalOpen }: TAddOrE
             />
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col
+          span={12}
+          md={8}
+        >
           <Form.Item
             label="Weight(kg)"
             name="weight"
@@ -247,7 +285,10 @@ const AddOrEditItemForm = ({ defaultValues, modalType, setIsModalOpen }: TAddOrE
             />
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col
+          span={12}
+          md={8}
+        >
           <Form.Item
             label="Style"
             name="style"
@@ -269,7 +310,7 @@ const AddOrEditItemForm = ({ defaultValues, modalType, setIsModalOpen }: TAddOrE
           </Form.Item>
         </Col>
         {modalType === "add" && (
-          <Col span={24}>
+          <Col span={12}>
             <Form.Item label="Image">
               <Form.Item
                 name="image"
@@ -292,8 +333,12 @@ const AddOrEditItemForm = ({ defaultValues, modalType, setIsModalOpen }: TAddOrE
         >
           <Button
             className="mr-2"
-            type="primary"
             htmlType="submit"
+            style={{
+              background: "#93278f",
+              color: "#fff",
+              width: "5rem",
+            }}
           >
             Submit
           </Button>

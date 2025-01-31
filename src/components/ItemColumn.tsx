@@ -1,9 +1,10 @@
 import { SetStateAction } from "react";
+import { Button, Popconfirm } from "antd";
+import { EditOutlined, DeleteOutlined, CopyOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import { jwtDecode } from "jwt-decode";
 import { productColumnsItem } from "../utils/item.const";
-import { Tag } from "antd";
 import { TProduct, TProductColumn } from "../types";
 import { useAppSelector } from "../redux/hooks";
-import { jwtDecode } from "jwt-decode";
 import { TUser } from "../redux/features/auth/authSlice";
 
 type TItemColumnProps = {
@@ -11,10 +12,10 @@ type TItemColumnProps = {
   setIsModalOpen: (value: boolean) => void;
   setDefaultValue: React.Dispatch<SetStateAction<TProduct>>;
   handleDelete: (id: string) => Promise<void>;
-  currencySign: string;
-
   setIsSellModalOpen: React.Dispatch<SetStateAction<boolean>>;
+  currencySign: string;
 };
+
 const ItemColumn = ({
   setModalType,
   setIsModalOpen,
@@ -24,96 +25,107 @@ const ItemColumn = ({
   currencySign,
 }: TItemColumnProps) => {
   const { token } = useAppSelector((state) => state.auth);
-  const user = jwtDecode(token as string) as TUser;
-  const { role } = user;
+  const { role } = jwtDecode(token as string) as TUser;
 
-  return productColumnsItem?.map((column) => {
+  return productColumnsItem.map((column) => {
     const returnableColumn: TProductColumn = {
-      key: column?.dataIndex,
-      title: column?.title,
-      dataIndex: column?.dataIndex,
-      width: column?.width,
+      key: column.dataIndex,
+      title: column.title,
+      dataIndex: column.dataIndex,
+      width: column.width,
     };
-    if (column?.filter) {
-      returnableColumn.filters = column?.filteredData?.map((item) => {
-        return {
-          text: item,
-          value: item,
-        };
-      });
+
+    if (column.filter) {
+      returnableColumn.filters = column.filteredData?.map((item) => ({
+        text: item,
+        value: item,
+      }));
       returnableColumn.filterMode = "tree";
       returnableColumn.filterSearch = true;
-      returnableColumn.onFilter = (value: unknown, record: TProduct): boolean => {
-        const dataIndex = column?.dataIndex as keyof TProduct;
-        return record[dataIndex] === value;
-      };
+      returnableColumn.onFilter = (value, record) => record[column.dataIndex as keyof TProduct] === value;
     }
-    if (column?.sort) {
+
+    if (column.sort) {
       returnableColumn.sorter = (a, b) => a.price - b.price;
-      returnableColumn.render = (value) =>
-        typeof value === "string" ||
-        (typeof value === "number" && (
+      returnableColumn.render = (value: any) =>
+        typeof value === "number" ? (
           <span>
             {currencySign}
             {value.toFixed(2)}
           </span>
-        ));
+        ) : (
+          value
+        );
     }
-    if (column?.actions) {
-      returnableColumn.render = (_, record) => (
-        <div>
-          {role === "manager" || role === "superAdmin" ? (
-            <Tag
-              className="cursor-pointer"
-              color="green"
+
+    if (column.actions) {
+      returnableColumn.render = (_, record) => {
+        const actions = [
+          (role === "manager" || role === "superAdmin") && (
+            <Button
+              key="edit"
+              style={{
+                background: "#93278f",
+                color: "#fff",
+              }}
+              size="small"
+              icon={<EditOutlined />}
               onClick={() => {
                 setModalType("edit");
                 setIsModalOpen(true);
-                setDefaultValue(record as TProduct);
+                setDefaultValue(record);
               }}
-            >
-              Edit
-            </Tag>
-          ) : null}
-
-          {role === "seller" || role === "superAdmin" ? (
-            <Tag
-              className="cursor-pointer"
-              color="blue"
+            />
+          ),
+          (role === "seller" || role === "superAdmin") && (
+            <Button
+              key="sell"
+              type="default"
+              size="small"
+              style={{ color: "#1890ff" }}
+              icon={<ShoppingCartOutlined />}
               onClick={() => {
-                setDefaultValue(record as TProduct);
+                setDefaultValue(record);
                 setIsSellModalOpen(true);
               }}
+            />
+          ),
+          (role === "manager" || role === "superAdmin") && (
+            <Popconfirm
+              key="delete"
+              title="Are you sure to delete this item?"
+              onConfirm={() => handleDelete(record._id)}
+              okText="Yes"
+              cancelText="No"
             >
-              Sell
-            </Tag>
-          ) : null}
-          {role === "manager" ||
-            (role === "superAdmin" && (
-              <Tag
-                className="cursor-pointer"
-                color="red"
-                onClick={() => handleDelete((record as TProduct)?._id)}
-              >
-                Delete
-              </Tag>
-            ))}
-          {role === "manager" || role === "superAdmin" ? (
-            <Tag
-              className="cursor-pointer"
-              color="yellow"
+              <Button
+                key="delete"
+                type="primary"
+                danger
+                size="small"
+                icon={<DeleteOutlined />}
+              />
+            </Popconfirm>
+          ),
+          (role === "manager" || role === "superAdmin") && (
+            <Button
+              key="duplicate"
+              type="dashed"
+              size="small"
+              icon={<CopyOutlined />}
               onClick={() => {
                 setModalType("add");
-                setDefaultValue(record as TProduct);
+                setDefaultValue(record);
                 setIsModalOpen(true);
               }}
-            >
-              Duplicate
-            </Tag>
-          ) : null}
-        </div>
-      );
+            />
+          ),
+        ];
+
+        return <div className="flex gap-2">{actions.filter(Boolean)}</div>;
+      };
     }
+
     return returnableColumn;
   });
 };

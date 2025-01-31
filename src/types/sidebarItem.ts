@@ -15,6 +15,7 @@ export type TSidebarItem = {
 };
 
 export type TRoutes = {
+  name?: string;
   path: string;
   element: ReactNode;
   children?: TRoutes[];

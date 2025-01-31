@@ -108,7 +108,7 @@ const Login = () => {
         }`}
       >
         <div className="background-panel z-10 shadow-md space-y-3">
-          <h3 className="text-black text-2xl font-bold text-center">
+          <h3 className="text-white text-2xl font-bold text-center">
             {!register ? "Don't have an account?" : "Login to existing account"}
           </h3>
           <div className="flex flex-col gap-4 items-center justify-center">
@@ -133,7 +133,7 @@ const Login = () => {
             onSubmit={onSubmit}
           >
             <div className="text-4xl font-extrabold text-center text-black">
-              Sporti<span className="text-yellow-400">Z</span>
+              Sporti<span className="text-primary">Z</span>
             </div>
             {register && (
               <Form.Item
@@ -182,25 +182,26 @@ const Login = () => {
                     htmlType="submit"
                     size="large"
                     style={{ transition: "none", transform: "none" }}
-                    className="w-full bg-yellow-400 rounded-md shadow-md font-bold block"
+                    className="text-white w-full bg-primary rounded-md shadow-md font-bold block"
                   >
                     {!register ? "Login" : "Register"}
                   </Button>
                 </Col>
-                {Object.keys(userCredentials).map((key) => (
-                  <Col span={8}>
-                    <Button
-                      type="dashed"
-                      key={key}
-                      onClick={() => {
-                        onSubmit(userCredentials[key]);
-                      }}
-                      className="w-full border-2 border-yellow-400 rounded-md shadow-md font-bold"
-                    >
-                      {key}
-                    </Button>
-                  </Col>
-                ))}
+                {!register &&
+                  Object.keys(userCredentials).map((key) => (
+                    <Col span={8}>
+                      <Button
+                        type="dashed"
+                        key={key}
+                        onClick={() => {
+                          onSubmit(userCredentials[key]);
+                        }}
+                        className="w-full border-2 border-primary rounded-md shadow-md font-bold"
+                      >
+                        {userCredentials[key].name}
+                      </Button>
+                    </Col>
+                  ))}
               </Row>
             </Form.Item>
           </CustomForm>

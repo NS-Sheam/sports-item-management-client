@@ -1,6 +1,7 @@
 import { Button } from "antd";
 import { TSales, TSalesColumn } from "../types";
 import { ISalesData } from "../pages/sale/SalesManagement";
+import { BsFileTextFill } from "react-icons/bs";
 
 type TSalesColumnProps = {
   setInvoiceModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -86,14 +87,17 @@ const SalesColumn = ({ setInvoiceModalOpen, setSaleData }: TSalesColumnProps) =>
       render: (_, record) => {
         return (
           <Button
+            style={{
+              background: "#93278f",
+              color: "#fff",
+            }}
+            size="small"
+            icon={<BsFileTextFill />}
             onClick={() => {
               setSaleData(record as ISalesData);
               setInvoiceModalOpen(true);
             }}
-            type="primary"
-          >
-            Invoice
-          </Button>
+          />
         );
       },
     },

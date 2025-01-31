@@ -19,7 +19,7 @@ const userApi = baseApi.injectEndpoints({
         };
       },
       providesTags: ["user"],
-      transformResponse: (response: TResponse<any>) => response.data,
+      // transformResponse: (response: TResponse<any>) => response.data,
     }),
     getSingleUser: builder.query({
       query: (id) => ({

@@ -83,6 +83,16 @@ const Sidebar = () => {
           items={[
             ...items,
             {
+              key: "Profile",
+              icon: <UserOutlined />,
+              label: <NavLink to="/profile">Profile</NavLink>,
+            },
+            {
+              key: "Change Password",
+              icon: <UserOutlined />,
+              label: <NavLink to="/change-password">Change Password</NavLink>,
+            },
+            {
               key: "logout",
               icon: <LogoutOutlined />,
               label: (

@@ -11,13 +11,23 @@ import { TUser } from "../../types";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import CustomSelectWithWatch from "../../components/form/CustomSelectWithWatch";
 import Search from "antd/es/input/Search";
+import CustomPagination from "../../components/form/CustomPagination";
+import { EditOutlined } from "@ant-design/icons";
 const UserManagement = () => {
   const [updateUserRole] = useUpdateUserRoleMutation();
   const [userRole, setUserRole] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [user, setUser] = useState<TUser>();
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const { data: userData, isLoading: isUserLoading } = useGetAllUsersQuery([{ name: "searchTerm", value: searchTerm }]);
+  const [page, setPage] = useState(1);
+  const { data, isLoading: isUserLoading } = useGetAllUsersQuery([
+    { name: "searchTerm", value: searchTerm },
+    { name: "page", value: page },
+    { name: "limit", value: 10 },
+  ]);
+
+  const userData = data?.data;
+  const meta = data?.meta;
 
   const columns = [
     {
@@ -42,14 +52,17 @@ const UserManagement = () => {
       render: (item: TUser) => (
         <Button
           className="cursor-pointer"
-          color="green"
+          style={{
+            background: "#93278f",
+            color: "#fff",
+          }}
+          size="small"
+          icon={<EditOutlined />}
           onClick={() => {
             setIsModalOpen(true);
             setUser(item);
           }}
-        >
-          Edit
-        </Button>
+        />
       ),
     },
   ];
@@ -57,8 +70,6 @@ const UserManagement = () => {
   const handleUserRole: SubmitHandler<FieldValues> = async (data) => {
     const toastId = toast.loading("Updating user role...");
     try {
-      console.log(data);
-
       const res = (await updateUserRole({ id: user?._id, data: data })) as TResponse<TUser>;
 
       if (!res.error) {
@@ -78,7 +89,7 @@ const UserManagement = () => {
   };
   return (
     <div className="space-y-4">
-      <h1 className="text-xl lg:text-2xl font-bold ">Users Management</h1>
+      <h1 className="text-xl lg:text-2xl font-bold text-primary ">Users Management</h1>
       <div>
         <Search
           style={{ width: "20rem" }}
@@ -92,6 +103,19 @@ const UserManagement = () => {
         dataSource={userData}
         rowKey="_id"
         loading={isUserLoading}
+        pagination={false}
+      />
+      <CustomPagination
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          padding: "1rem",
+        }}
+        page={page}
+        setPage={setPage}
+        total={meta?.total}
+        pageSize={meta?.limit}
       />
       <GenericItemModal
         title="Change Role"

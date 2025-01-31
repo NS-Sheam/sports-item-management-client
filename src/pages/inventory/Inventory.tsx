@@ -80,7 +80,7 @@ const ProductManagement = () => {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-xl lg:text-2xl font-bold ">Products Management</h1>
+      <h1 className="text-xl lg:text-2xl font-bold text-primary">Products Management</h1>
 
       {/* Search Bar */}
       <div>

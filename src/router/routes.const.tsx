@@ -14,6 +14,8 @@ import Register from "../pages/Register";
 import SalesManagement from "../pages/sale/SalesManagement";
 import UserManagement from "../pages/user/UserManagement";
 import PrivateRoute from "./PrivateRoute";
+import Profile from "../pages/profile/Profile";
+import ChangePassword from "../pages/ChangePassword";
 
 export const routeItems = [
   {
@@ -53,6 +55,23 @@ export const routeItems = [
           </PrivateRoute>
         ),
         icon: <UsergroupAddOutlined />,
+      },
+      {
+        // name: "Profile",
+        path: "/profile",
+        element: (
+          <PrivateRoute userRole={["manager", "superAdmin", "seller"]}>
+            <Profile />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/change-password",
+        element: (
+          <PrivateRoute userRole={["manager", "superAdmin", "seller"]}>
+            <ChangePassword />
+          </PrivateRoute>
+        ),
       },
     ],
   },

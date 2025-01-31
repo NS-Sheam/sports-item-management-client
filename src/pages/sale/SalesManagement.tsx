@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Pagination, Table, TableProps } from "antd";
+import { Table, TableProps } from "antd";
 import { useGetSalesQuery } from "../../redux/features/sales/salesApi";
 import SalesColumn from "../../components/SalesColumn";
 import { TSales, TSalesColumn } from "../../types/sales";
@@ -12,6 +12,7 @@ import dayjs from "dayjs";
 import GenericItemModal from "../../components/modal/GenericItemModal";
 import PdfComponent from "../../components/PdfComponent";
 import { useAppSelector } from "../../redux/hooks";
+import CustomPagination from "../../components/form/CustomPagination";
 
 export interface ISalesData extends TSales {
   key: string;
@@ -31,7 +32,7 @@ const SalesManagement = () => {
 
   const { data: items, isLoading: isSalesDataLoading } = useGetSalesQuery([
     { name: "page", value: page },
-    { name: "limit", value: 5 },
+    { name: "limit", value: 10 },
     { name: "branch", value: role === "manager" ? branch! : "" },
     ...params,
   ]);
@@ -68,10 +69,10 @@ const SalesManagement = () => {
       setParams(queryParams);
     }
   };
-  const metaData = items?.meta;
+  const meta = items?.meta;
   return (
     <div className="space-y-4">
-      <h1 className="text-xl lg:text-2xl font-bold ">Sales Management</h1>
+      <h1 className="text-xl lg:text-2xl font-bold text-primary">Sales Management</h1>
       <Table
         scroll={{ x: 400 }}
         columns={columns as any}
@@ -87,12 +88,17 @@ const SalesManagement = () => {
       >
         <PdfComponent saleData={saleData!} />
       </GenericItemModal>
-      <Pagination
-        style={{ marginTop: "1rem" }}
-        current={page}
-        onChange={(value) => setPage(value)}
-        total={metaData?.total}
-        pageSize={metaData?.limit}
+      <CustomPagination
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          padding: "1rem",
+        }}
+        page={page}
+        setPage={setPage}
+        total={meta?.total}
+        pageSize={meta?.limit}
       />
     </div>
   );
