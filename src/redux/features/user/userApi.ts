@@ -1,4 +1,4 @@
-import { TQueryParams, TResponse } from "../../../types/global";
+import { TQueryParams } from "../../../types/global";
 import { baseApi } from "../../api/baseApi";
 
 const userApi = baseApi.injectEndpoints({
